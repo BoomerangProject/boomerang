@@ -1,3 +1,4 @@
+![alt text](https://github.com/BoomerangProject/boomerang-wiki/blob/master/images/logo.png "Boomerang Logo")
 # Boomerang 2.0
 This is a new repository that is bootstrapped from [UniversalLoginSDK](https://github.com/EthWorks/UniversalLoginSDK) that will be borrowed from heavily in Boomerang 2.0
 
