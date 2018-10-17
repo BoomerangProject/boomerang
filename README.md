@@ -1,3 +1,6 @@
+# Boomerang 2.0
+This is a new repository that is bootstrapped from [UniversalLoginSDK](https://github.com/EthWorks/UniversalLoginSDK) that will be borrowed from heavily in Boomerang 2.0
+
 [![Build Status](https://travis-ci.com/EthWorks/UniversalLoginSDK.svg?branch=master)](https://travis-ci.com/EthWorks/UniversalLoginSDK)
 
 # Ethereum IdentitySDK
