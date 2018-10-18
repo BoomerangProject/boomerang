@@ -13,18 +13,18 @@ describe('Boomerang Token', async () => {
   const maxTokens = 10 * oneBillion * tokenUnit;
 
   let provider;
-  let token;
+  let boomerangToken;
   let wallet;
   let walletTo;
 
   beforeEach(async () => {
     provider = createMockProvider();
     [wallet, walletTo] = await getWallets(provider);
-    token = await deployContract(wallet, BoomerangToken);
+    boomerangToken = await deployContract(wallet, BoomerangToken);
   });
 
   it('Assigns 10 Billion BOOM to creator', async () => {
-    let assignedTokens = Number(await token.balanceOf(wallet.address));
+    let assignedTokens = Number(await boomerangToken.balanceOf(wallet.address));
     expect(assignedTokens).to.eq(maxTokens);
   });
 
