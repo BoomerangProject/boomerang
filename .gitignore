@@ -2,6 +2,9 @@
 yarn-error.log
 /.vscode
 /node_modules
+/boomerang-contracts/build/
+/boomerang-contracts/node_modules
+/boomerang-contracts/yarn-error.log
 /universal-login-contracts/build/
 /universal-login-contracts/node_modules
 /universal-login-contracts/yarn-error.log
