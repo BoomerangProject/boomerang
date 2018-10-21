@@ -1,14 +1,17 @@
 {
   "private": true,
-  "name": "universal-login-monorepo",
-  "repository": "git@github.com:EthWorks/EthereumIdentitySDK.git",
-  "author": "Marek Kirejczyk <marek.kirejczyk@gmail.com>",
+  "name": "boomerang-monorepo",
+  "repository": "git@github.com:BoomerangProject/boomerang.git",
+  "author": "Kyle Bryant <kyle@bryant.technology>",
   "license": "MIT",
   "version": "0.1.0",
   "devDependencies": {
     "chalk": "^2.0.1"
   },
   "workspaces": [
+    "boomerang-contracts",
+    "boomerang-sdk",
+    "boomerang-example",
     "universal-login-contracts",
     "universal-login-relayer",
     "universal-login-sdk",

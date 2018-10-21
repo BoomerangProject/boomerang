@@ -5,6 +5,12 @@ yarn-error.log
 /boomerang-contracts/build/
 /boomerang-contracts/node_modules
 /boomerang-contracts/yarn-error.log
+/boomerang-example/.env
+/boomerang-example/dist
+/boomerang-example/build
+/boomerang-example/.cache
+/boomerang-example/node_modules
+/boomerang-example/yarn-error.log
 /universal-login-contracts/build/
 /universal-login-contracts/node_modules
 /universal-login-contracts/yarn-error.log
