@@ -33,7 +33,7 @@ const sdk = new BoomerangSDK(
 `editReview(string reviewRequestAddress, int rating, string review, string privateKey, string ethTxDetails);`
 
 ### Get User Level
-`getUserLevel(string businessAddress, string userAddress);`
+`getUserLevel(string businessAddress, string userAddress, int xpPerLevel=100);`
 
 ### Get User XP
 `getUserXP(string businessAddress, string userAddress);`
