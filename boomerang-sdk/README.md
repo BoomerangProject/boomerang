@@ -9,6 +9,7 @@ import BoomerangSDK from 'BoomerangSDK';
 const sdk = new BoomerangSDK(
   'https://relayer.boomerang.xyz',
   'https://etherscan.io/{yourapikey}'
+  'https://ipfs.infura/{yourapikey}`
 );
 ```
 
@@ -23,10 +24,19 @@ const sdk = new BoomerangSDK(
 `requestBusinessReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string txDetailsJSON, string privateKey, string ethTxDetails);`
 
 ### Submit Review
-`submitReview(int rating, string review, string privateKey, string ethTxDetails);`
+`submitReview(string reviewRequestAddress, int rating, string review, string privateKey, string ethTxDetails);`
+
+### Cancel Review
+`cancelReview(string reviewRequestAddress, string privateKey, string ethTxDetails);`
+
+### Edit Review
+`editReview(string reviewRequestAddress, int rating, string review, string privateKey, string ethTxDetails);`
 
 ### Get User Level
 `getUserLevel(string businessAddress, string userAddress);`
 
 ### Get User XP
 `getUserXP(string businessAddress, string userAddress);`
+
+### Get Reviews
+`getReviews(string userAddress);`
