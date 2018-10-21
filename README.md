@@ -4,8 +4,8 @@ This is a new repository that is bootstrapped from [UniversalLoginSDK](https://g
 ### Structure
 This repository is organized as monorepo. 
 
-- [Boomerang Contracts](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-contracts) - all contracts used for Boomerang
 - [BoomerangSDK](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-sdk) - easy way to communicate with relayer, boomerang smart contracts, and IPFS
+- [Boomerang Contracts](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-contracts) - all contracts used for Boomerang
 - [UniversalLoginSDK](https://github.com/EthWorks/UniversalLoginSDK/blob/master/universal-login-sdk/README.md) - easy way to communicate with relayer by http protocol
 - [Universal Login Contracts](https://github.com/EthWorks/UniversalLoginSDK/tree/master/universal-login-contracts) - all contracts used for the UniversalLoginSDK
 - [Universal Login Example](https://github.com/EthWorks/UniversalLoginSDK/blob/master/universal-login-example/README.md) - example app, which shows how to use UniversalLoginSDK
