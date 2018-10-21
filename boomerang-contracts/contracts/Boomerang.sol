@@ -82,7 +82,19 @@ contract Boomerang is IBoomerang{
     function cancelReview() public onlyReviewContract {
         emit ReviewCancelled(msg.sender);
     }
+
+    function requestReviewEdit(address _reviewRequest, uint _rating, string _reviewIPFS) public onlyReviewContract {
+        emit ReviewEditRequested(_reviewRequest, msg.sender, _rating, _reviewIPFS);
+    }
+
+    function likeReview(address _reviewRequest) public {
+        emit ReviewLiked(_reviewRequest, msg.sender);
+    }
     
+    function unlikeReview(address _reviewRequest) public  {
+        emit ReviewUnliked(_reviewRequest, msg.sender);
+    }
+
     modifier onlyReviewContract() {
         require(
             reviewContracts[msg.sender],

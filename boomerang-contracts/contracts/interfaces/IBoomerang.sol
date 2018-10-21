@@ -63,4 +63,7 @@ interface IBoomerang {
         string reviewIPFS
     );
     event ReviewCancelled(address reviewRequest);
+    event ReviewEditRequested(address reviewRequest, address customer, uint rating, string review);
+    event ReviewLiked(address reviewRequest, address customer);
+    event ReviewUnliked(address reviewRequest, address customer);
 }
