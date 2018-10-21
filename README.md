@@ -6,6 +6,7 @@ This repository is organized as monorepo.
 
 - [BoomerangSDK](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-sdk) - easy way to communicate with relayer, boomerang smart contracts, and IPFS
 - [Boomerang Contracts](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-contracts) - all contracts used for Boomerang
+- [Boomerang Example](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-example) - example app, which shows how to use BoomerangSDK
 - [UniversalLoginSDK](https://github.com/EthWorks/UniversalLoginSDK/blob/master/universal-login-sdk/README.md) - easy way to communicate with relayer by http protocol
 - [Universal Login Contracts](https://github.com/EthWorks/UniversalLoginSDK/tree/master/universal-login-contracts) - all contracts used for the UniversalLoginSDK
 - [Universal Login Example](https://github.com/EthWorks/UniversalLoginSDK/blob/master/universal-login-example/README.md) - example app, which shows how to use UniversalLoginSDK
