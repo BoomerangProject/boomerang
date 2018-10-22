@@ -35,6 +35,9 @@ const sdk = new BoomerangSDK(
 ### Edit Review
 `editReview(string reviewRequestAddress, int rating, string review, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
+### Get Business Funds
+`getBusinessFunds(string businessAddress);`
+
 ### Get User Level
 `getUserLevel(string businessAddress, string userAddress, int xpPerLevel=100);`
 
