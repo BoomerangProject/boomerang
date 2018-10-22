@@ -1,7 +1,5 @@
 ![alt text](https://github.com/BoomerangProject/boomerang-wiki/blob/master/images/logo.png "Boomerang Logo")
 # BoomerangSDK
-The following is under construction...
-
 To create a SDK instance:
 
 ```js
