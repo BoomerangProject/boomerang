@@ -23,6 +23,7 @@ class BoomerangService {
     );
     this.ensService = ensService;
     this.approveEvent = new Interface(BoomToken.interface).events.Approval;
+    this.reviewRequestEvent = new Interface(Boomerang.interface).events.ReviewRequested;
   }
 
   async addBusinessFunds(numTokens=20) {
@@ -93,15 +94,35 @@ class BoomerangService {
     return utils.formatEther(await this.tokenContract.allowance(this.identityService.identity.address, this.boomerangContractAddress));
   }
 
+  async getCustomerReviewRequests(userAddress) {
+    const reviewRequests = [];
+    const filter = {
+      fromBlock: 0,
+      address: this.boomerangContractAddress,
+      topics: [this.reviewRequestEvent.topics]
+    };
+    const events = await this.provider.getLogs(filter);
+    for (const event of events) {
+      const eventArguments = this.reviewRequestEvent.parse(this.reviewRequestEvent.topics, event.data);
+      if (eventArguments.customer === userAddress) {
+        reviewRequests.push({
+          customer: eventArguments.customer,
+          txDetails: eventArguments.txDetailsIPFS
+        });
+      }
+    }
+    return reviewRequests.reverse();
+  }
+
   // async getEventsFromLogs(events) {
   //   const approvals = [];
-  //   for (const event of events) {
-  //     const eventArguments = this.approveEvent.parse(this.approveEvent.topics, event.data);
-  //     approvals.push({
-  //       spender: eventArguments.spender,
-  //       value: eventArguments.value
-  //     });
-  //   }
+    // for (const event of events) {
+    //   const eventArguments = this.approveEvent.parse(this.approveEvent.topics, event.data);
+    //   approvals.push({
+    //     spender: eventArguments.spender,
+    //     value: eventArguments.value
+    //   });
+    // }
   //   return approvals.reverse();
   // }
 

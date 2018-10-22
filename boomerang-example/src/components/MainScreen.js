@@ -59,6 +59,9 @@ class MainScreen extends Component {
       loadedFunds: loadedFunds
     });
 
+    const reviewRequests = await this.boomerangService.getCustomerReviewRequests(identityService.identity.address);
+    console.log(reviewRequests);
+
 
     setTimeout(this.update.bind(this), 1000);
   }
