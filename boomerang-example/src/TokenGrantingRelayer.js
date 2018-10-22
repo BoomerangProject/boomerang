@@ -1,5 +1,5 @@
 import { waitForContractDeploy } from "./utils";
-import Token from '../build/Token';
+import BoomToken from '../build/BoomerangToken';
 import Relayer from 'universal-login-relayer';
 import ethers, {Wallet, utils} from 'ethers';
 
@@ -13,9 +13,9 @@ class TokenGrantingRelayer extends Relayer {
   }
 
   addHooks() {
-    this.tokenContract = new ethers.Contract(this.tokenContractAddress, Token.interface, this.deployerWallet);
+    this.tokenContract = new ethers.Contract(this.tokenContractAddress, BoomToken.interface, this.deployerWallet);
     this.hooks.addListener('created', (transaction) => {
-      waitForContractDeploy(this.provider, Token, transaction.hash)
+      waitForContractDeploy(this.provider, BoomToken, transaction.hash)
         .then((identityContract) => {
           this.identityAddress = identityContract.address;
           this.tokenContract.transfer(identityContract.address, utils.parseEther('100'));});

@@ -19,7 +19,8 @@
     "react-dom": "^16.4.1",
     "react-native-public-ip": "^1.0.0",
     "universal-login-relayer": "^0.1.0",
-    "universal-login-sdk": "^0.1.0"
+    "universal-login-sdk": "^0.1.0",
+    "web3": "^1.0.0-beta.36"
   },
   "scripts": {
     "start": "parcel --no-cache ./src/index.html",

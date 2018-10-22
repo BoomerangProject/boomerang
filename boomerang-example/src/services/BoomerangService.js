@@ -14,16 +14,30 @@ class BoomerangService {
       Boomerang.interface,
       this.provider
     );
-    this.likeReviewEvent = new Interface(Boomerang.interface).events.ReviewLiked;
     this.ensService = ensService;
+    this.likeReviewEvent = new Interface(Boomerang.interface).events.ReviewLiked;
   }
 
   async likeReview() {
+    const {data} = new Interface(Boomerang.interface).functions.likeReview('0x76096629060567956C1e18BF8C428196f1f71539');
     const message = {
-      to: this.clickerContractAddress,
+      to: this.boomerangContractAddress,
+      from: this.identityService.identity.address,
+      value: [0],
+      data,
+      gasToken: tokenContractAddress,
+      ...DEFAULT_PAYMENT_OPTIONS
+    };
+    await this.identityService.execute(message);
+  }
+
+  async cancelReview() {
+    const {data} = new Interface(Boomerang.interface).functions.cancelReview();
+    const message = {
+      to: this.boomerangContractAddress,
       from: this.identityService.identity.address,
       value: 0,
-      data: this.boomerangContract.interface.functions.likeReview('0x76096629060567956C1e18BF8C428196f1f71539').data,
+      data,
       gasToken: tokenContractAddress,
       ...DEFAULT_PAYMENT_OPTIONS
     };

@@ -22,7 +22,7 @@ class MainScreen extends Component {
 
   async onClickerClick() {
     //await this.clickerService.click();
-    await this.boomerangService.likeReview();
+    //await this.boomerangService.likeReview();
     this.setState({lastClick: '0'});
   }
 

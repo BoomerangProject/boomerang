@@ -1,5 +1,5 @@
 import ethers, {utils} from 'ethers';
-import Token from '../../build/Token';
+import Token from '../../build/BoomerangToken';
 
 class TokenService {
   constructor(tokenContractAddress, provider) {

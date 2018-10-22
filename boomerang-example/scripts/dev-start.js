@@ -4,7 +4,6 @@ import Ganache from 'ganache-core';
 import {defaultAccounts, getWallets, deployContract} from 'ethereum-waffle';
 import {ENSDeployer} from 'universal-login-relayer';
 import Clicker from '../build/Clicker';
-import Token from '../build/Token';
 import Boomerang from '../build/Boomerang';
 import BoomToken from '../build/BoomerangToken';
 import {promisify} from 'util';
@@ -58,7 +57,7 @@ class Deployer {
     const listenPromise = promisify(server.listen);
     await listenPromise(this.ganachePort);
     console.log(`Ganache up and running on ${this.ganacheUrl()}...`);
-    this.provider = new ethers.providers.JsonRpcProvider(this.ganacheUrl(), chainSpec);
+    this.provider = await new ethers.providers.JsonRpcProvider(this.ganacheUrl(), chainSpec);
     const wallets = await getWallets(this.provider);
     this.deployer = wallets[wallets.length - 1];
     this.deployerPrivateKey = defaultAccounts[defaultAccounts.length - 1].secretKey;
