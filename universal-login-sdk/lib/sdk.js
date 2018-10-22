@@ -99,20 +99,10 @@ class EthereumIdentitySDK {
     const wallet = new ethers.Wallet(privateKey, this.provider);
     const nonce = parseInt(await this.getLastExecutionNonce(contractAddress, wallet), 10);
     message.nonce = nonce;
-    console.log(wallet);
-    console.log(message.to);
-    console.log(contractAddress);
-    console.log(message.value);
-    console.log(message.data);
-    console.log(message.nonce);
-    const signature = messageSignature(wallet, message.to, contractAddress, 0, message.data, message.nonce, message.gasToken, message.gasPrice, message.gasLimit);
-    console.log("Creating body");
+    const signature = messageSignature(wallet, message.to, contractAddress, message.value, message.data, message.nonce, message.gasToken, message.gasPrice, message.gasLimit);
     const body = JSON.stringify({...this.defaultPaymentOptions, ...message, contractAddress, signature});
-    console.log("Creating response");
     const response = await fetch(url, {headers, method, body});
-    console.log("Creating response JSON");
     const responseJson = await response.json();
-    console.log(response.status);
     if (response.status === 201) {
       const receipt = await waitForTransactionReceipt(this.provider, responseJson.transaction.hash);
       return this.getExecutionNonce(receipt.logs);
