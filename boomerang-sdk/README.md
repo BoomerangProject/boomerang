@@ -19,6 +19,9 @@ const sdk = new BoomerangSDK(
 ### Generate Identity
 `generateIdentity(string ensName, int numTokens, string[] publicKeys, string roles[], string identityPrivateKey);`
 
+### Add Business Funds
+`addBusinessFunds(int numTokens, string identityPrivateKey, string identityAddress);`
+
 ### Request Worker Review
 `requestWorkerReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string workerAddress, int workerRewardTokens, int workerRewardXP, string businessTxDetails, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
