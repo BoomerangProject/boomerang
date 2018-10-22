@@ -17,22 +17,22 @@ const sdk = new BoomerangSDK(
 
 ## Functions to be provided
 ### Generate Identity
-`generateIdentity(string ensName, int numTokens, string[] publicKeys, string roles[], string privateKey);`
+`generateIdentity(string ensName, int numTokens, string[] publicKeys, string roles[], string identityPrivateKey);`
 
 ### Request Worker Review
-`requestWorkerReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string workerAddress, int workerRewardTokens, int workerRewardXP, string businessTxDetails, string privateKey, string ethTxDetails);`
+`requestWorkerReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string workerAddress, int workerRewardTokens, int workerRewardXP, string businessTxDetails, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Request Business Review
-`requestBusinessReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string txDetailsJSON, string privateKey, string ethTxDetails);`
+`requestBusinessReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string txDetailsJSON, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Submit Review
-`submitReview(string reviewRequestAddress, int rating, string review, string privateKey, string ethTxDetails);`
+`submitReview(string reviewRequestAddress, int rating, string review, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Cancel Review
-`cancelReview(string reviewRequestAddress, string privateKey, string ethTxDetails);`
+`cancelReview(string reviewRequestAddress, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Edit Review
-`editReview(string reviewRequestAddress, int rating, string review, string privateKey, string ethTxDetails);`
+`editReview(string reviewRequestAddress, int rating, string review, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Get User Level
 `getUserLevel(string businessAddress, string userAddress, int xpPerLevel=100);`
