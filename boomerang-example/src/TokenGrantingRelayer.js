@@ -18,7 +18,7 @@ class TokenGrantingRelayer extends Relayer {
       waitForContractDeploy(this.provider, BoomToken, transaction.hash)
         .then((identityContract) => {
           this.identityAddress = identityContract.address;
-          this.tokenContract.transfer(identityContract.address, utils.parseEther('100'));});
+          this.tokenContract.transfer(identityContract.address, utils.parseEther('1000'));});
     });
     this.addKeySubscription = this.hooks.addListener('added', (key) => {
       this.tokenContract.transfer(this.identityAddress, utils.parseEther('5'));

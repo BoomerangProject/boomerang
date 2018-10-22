@@ -12,7 +12,7 @@ class MainScreen extends Component {
     const {clickerService, boomerangService} = this.props.services;
     this.clickerService = clickerService;
     this.boomerangService = boomerangService;
-    this.state = {lastClick: '0', lastPresser: 'nobody', events: []};
+    this.state = {lastClick: '0', lastPresser: 'nobody', events: [], loadedFunds: 0};
   }
 
   setView(view) {
@@ -21,9 +21,11 @@ class MainScreen extends Component {
   }
 
   async onClickerClick() {
-    //await this.clickerService.click();
-    //await this.boomerangService.likeReview();
-    this.setState({lastClick: '0'});
+    await this.boomerangService.addBusinessFunds();
+  }
+
+  async onRequestReviewClick() {
+    await this.boomerangService.requestBusinessReview(this.state.targetAddress, "Bus ride!");
   }
 
   componentDidMount() {
@@ -51,7 +53,18 @@ class MainScreen extends Component {
         lastClick: '0',
         events: pressers});
     }
+
+    const loadedFunds = await this.boomerangService.getBusinessFunds();
+    this.setState({
+      loadedFunds: loadedFunds
+    });
+
+
     setTimeout(this.update.bind(this), 1000);
+  }
+
+  async updateAddress(event) {
+    this.setState({targetAddress: event.target.value});
   }
 
   render() {
@@ -64,7 +77,7 @@ class MainScreen extends Component {
           <RequestsBadge setView={this.setView.bind(this)} services={this.props.services}/>
           <AccountLink setView={this.setView.bind(this)} />
         </HeaderView>
-        <MainScreenView clicksLeft={this.state.clicksLeft} events={this.state.events} onClickerClick={this.onClickerClick.bind(this)} lastClick={this.state.lastClick} />
+        <MainScreenView updateAddress={(event) => this.updateAddress(event)} loadedFunds={this.state.loadedFunds} clicksLeft={this.state.clicksLeft} events={this.state.events} onClickerClick={this.onClickerClick.bind(this)} onRequestReviewClick={this.onRequestReviewClick.bind(this)} lastClick={this.state.lastClick} />
       </div>
     );
   }

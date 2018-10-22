@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import Blockies from 'react-blockies';
+import TextBox from './TextBox';
 
 class MainScreenView extends Component {
   renderEvent(event) {
@@ -23,15 +24,30 @@ class MainScreenView extends Component {
           <p>
             You have{' '}
             <span className="bold">
-              {this.props.clicksLeft} <em>kliks</em>
+              {this.props.clicksLeft} <em>BOOMS</em>
             </span>{' '}
             left
+          </p>
+
+          <p>
+            Boomerang Allowance: 
+            <span className="bold">
+              {this.props.loadedFunds} <em>BOOMS</em>
+            </span>{' '}
           </p>
           <button
             className="btn main-screen-btn"
             onClick={this.props.onClickerClick}
           >
-            click here
+            Increase Allowance
+          </button>
+
+          <TextBox onChange={(event) => this.props.updateAddress(event)} />
+          <button
+            className="btn main-screen-btn"
+            onClick={this.props.onRequestReviewClick}
+          >
+            Request Review
           </button>
 
           <p className="click-cost">
@@ -53,8 +69,11 @@ class MainScreenView extends Component {
 
 MainScreenView.propTypes = {
   clicksLeft: PropTypes.number,
+  loadedFunds: PropTypes.string,
   lastClick: PropTypes.string,
+  updateAddress: PropTypes.func,
   onClickerClick: PropTypes.func,
+  onRequestReviewClick: PropTypes.func,
   events: PropTypes.array
 };
 
