@@ -9,8 +9,9 @@ import PropTypes from 'prop-types';
 class MainScreen extends Component {
   constructor(props) {
     super(props);
-    const {clickerService} = this.props.services;
+    const {clickerService, boomerangService} = this.props.services;
     this.clickerService = clickerService;
+    this.boomerangService = boomerangService;
     this.state = {lastClick: '0', lastPresser: 'nobody', events: []};
   }
 
@@ -20,7 +21,8 @@ class MainScreen extends Component {
   }
 
   async onClickerClick() {
-    await this.clickerService.click();
+    //await this.clickerService.click();
+    await this.boomerangService.likeReview();
     this.setState({lastClick: '0'});
   }
 

@@ -83,7 +83,7 @@ contract Boomerang is IBoomerang{
         emit ReviewCancelled(msg.sender);
     }
 
-    function requestReviewEdit(address _reviewRequest, uint _rating, string _reviewIPFS) public onlyReviewContract {
+    function requestReviewEdit(address _reviewRequest, uint _rating, string _reviewIPFS) public {
         emit ReviewEditRequested(_reviewRequest, msg.sender, _rating, _reviewIPFS);
     }
 

@@ -1,7 +1,7 @@
 import {EventEmitter} from 'fbemitter';
 import EthereumIdentitySDK from 'universal-login-sdk';
 import ethers from 'ethers';
-import config, {clickerContractAddress, tokenContractAddress} from '../../config/config';
+import config, {clickerContractAddress, tokenContractAddress, boomerangContractAddress} from '../../config/config';
 import IdentityService from './IdentityService';
 import ClickerService from './ClickerService';
 import EnsService from './EnsService';
@@ -9,6 +9,7 @@ import AuthorisationService from './AuthorisationService';
 import TokenService from './TokenService';
 import IdentitySelectionService from './IdentitySelectionService';
 import BackupService from './BackupService';
+import BoomerangService from './BoomerangService'
 
 
 class Services {
@@ -22,6 +23,7 @@ class Services {
     this.identityService = new IdentityService(this.sdk, this.emitter, this.provider);
     this.backupService = new BackupService(this.identityService);
     this.clickerService = new ClickerService(this.identityService, clickerContractAddress, this.provider, this.ensService);
+    this.boomerangService = new BoomerangService(this.identityService, boomerangContractAddress, this.provider, this.ensService);
     this.authorisationService = new AuthorisationService(this.sdk, this.emitter);
     this.identitySelectionService = new IdentitySelectionService(this.sdk, config.ensDomains);
   }

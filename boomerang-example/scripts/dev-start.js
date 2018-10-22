@@ -111,6 +111,11 @@ class Deployer {
     this.env.CLICKER_CONTRACT_ADDRESS = clickerContract.address;
   }
 
+  async deployBoomerangContract() {
+    const boomerangContract = await deployContract(this.deployer, Boomerang, [this.tokenContract.address]);
+    this.env.BOOMERANG_CONTRACT_ADDRESS = boomerangContract.address;
+  }
+
   runWebServer() {
     const env = {...process.env, ...this.env};
     this.spawnProcess('web', 'yarn', ['start'], {env});
@@ -141,6 +146,8 @@ class Deployer {
     await this.startRelayer();
     console.log('Deploying clicker contract...');
     await this.deployClickerContract();
+    console.log('Deploying Boomerang contract...');
+    await this.deployBoomerangContract();
     console.log('Preparing relayer...');
     await this.relayer.addHooks();
     console.log('Starting example app web server...');
