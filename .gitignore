@@ -11,6 +11,9 @@ yarn-error.log
 /boomerang-example/.cache
 /boomerang-example/node_modules
 /boomerang-example/yarn-error.log
+/boomerang-sdk/dist/
+/boomerang-sdk/node_modules/
+/boomerang-sdk/yarn-error.log
 /universal-login-contracts/build/
 /universal-login-contracts/node_modules
 /universal-login-contracts/yarn-error.log
