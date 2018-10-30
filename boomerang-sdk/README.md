@@ -6,7 +6,7 @@ To create a SDK instance:
 import BoomerangSDK from 'BoomerangSDK';
 const sdk = new BoomerangSDK(
   'https://relayer.boomerang.xyz',
-  'https://etherscan.io/{yourapikey}',
+  'https://ropsten.infura.io/{yourapikey}',
   'https://ipfs.infura.io/{yourapikey}',
   '(default) BoomerangContractAddress',
   '(default) BoomerangTokenAddress'
