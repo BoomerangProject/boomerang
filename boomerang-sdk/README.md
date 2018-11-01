@@ -26,7 +26,7 @@ Allows Boomerang contract to use `numTokens` number of BOOM tokens. A business w
 `requestWorkerReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string workerAddress, int workerRewardTokens, int workerRewardXP, string businessTxDetails, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Request Business Review ✔
-`requestBusinessReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string txDetailsJSON, string ethTxDetails, string identityPrivateKey, string identityAddress);`
+`requestBusinessReview(customerAddress, txDetailsJson, customerTokenReward, customerXpReward, identityAddress, identityPrivateKey)`
 
 ### Submit Review
 `submitReview(string reviewRequestAddress, int rating, string review, string ethTxDetails, string identityPrivateKey, string identityAddress);`
