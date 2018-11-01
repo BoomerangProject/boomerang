@@ -2,7 +2,7 @@
 This is a new repository that is bootstrapped from [UniversalLoginSDK](https://github.com/EthWorks/UniversalLoginSDK) that will be borrowed from heavily in Boomerang.
 
 ### Structure
-This repository is organized as monorepo. 
+This repository is organized as a monorepo. 
 
 - [BoomerangSDK](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-sdk) - easy way to communicate with relayer, boomerang smart contracts, and IPFS
 - [Boomerang Contracts](https://github.com/BoomerangProject/boomerang/tree/master/boomerang-contracts) - all contracts used for Boomerang

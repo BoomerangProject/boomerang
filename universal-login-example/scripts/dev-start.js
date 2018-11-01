@@ -6,7 +6,7 @@ import {ENSDeployer} from 'universal-login-relayer';
 import Clicker from '../build/Clicker';
 import Token from '../build/Token';
 import {promisify} from 'util';
-import TokenGrantingRelayer from '../src/TokenGrantingRelayer';
+import TokenGrantingRelayer from '../src/relayer/TokenGrantingRelayer';
 
 
 const chainSpec = {
@@ -66,26 +66,33 @@ class Deployer {
     const deployer = new ENSDeployer(this.provider, this.deployerPrivateKey);
     await deployer.deployRegistrars(config.ensRegistrars);
     this.env = deployer.variables;
+    let count = 1;
+    for (const domain of Object.keys(config.ensRegistrars)) {
+      this.env[`ENS_DOMAIN_${count}`] = domain;
+      count += 1;
+    }
+    this.env.JSON_RPC_URL = this.ganacheUrl();
     this.config = Object.freeze({
       jsonRpcUrl: 'http://localhost:18545',
       port: 3311,
       privateKey: defaultAccounts[0].secretKey,
       chainSpec: {
         ensAddress: this.env.ENS_ADDRESS,
+        publicResolverAddress: this.env.ENS_RESOLVER1_ADDRESS,
         chainId: 0
       },
       ensRegistrars: {
-        'mylogin.eth': {
+        [this.env.ENS_DOMAIN_1]: {
           resolverAddress: this.env.ENS_RESOLVER1_ADDRESS,
           registrarAddress: this.env.ENS_REGISTRAR1_ADDRESS,
           privteKey: this.env.ENS_REGISTRAR1_PRIVATE_KEY
         },
-        'universal-id.eth': {
+        [this.env.ENS_DOMAIN_2]: {
           resolverAddress: this.env.ENS_RESOLVER2_ADDRESS,
           registrarAddress: this.env.ENS_REGISTRAR2_ADDRESS,
           privteKey: this.env.ENS_REGISTRAR2_PRIVATE_KEY
         },
-        'popularapp.eth': {
+        [this.env.ENS_DOMAIN_3]: {
           resolverAddress: this.env.ENS_RESOLVER3_ADDRESS,
           registrarAddress: this.env.ENS_REGISTRAR3_ADDRESS,
           privteKey: this.env.ENS_REGISTRAR3_PRIVATE_KEY
@@ -95,17 +102,20 @@ class Deployer {
   }
 
   startRelayer() {
-    this.relayer = new TokenGrantingRelayer(this.provider, this.config, this.deployerPrivateKey, this.tokenContract.address);
+    this.relayer = new TokenGrantingRelayer({...this.config, privateKey: this.deployerPrivateKey, tokenContractAddress: this.tokenContract.address}, this.provider);    
+    this.env.RELAYER_URL = `http://localhost:${this.config.port}`;
     this.relayer.start();
   }
 
   async deployTokenContract() {
     this.tokenContract = await deployContract(this.deployer, Token);
+    console.log(`Token contract address: ${this.tokenContract.address}`);
     this.env.TOKEN_CONTRACT_ADDRESS = this.tokenContract.address;
   }
 
   async deployClickerContract() {
     const clickerContract = await deployContract(this.deployer, Clicker);
+    console.log(`Clicker contract address: ${clickerContract.address}`);
     this.env.CLICKER_CONTRACT_ADDRESS = clickerContract.address;
   }
 
