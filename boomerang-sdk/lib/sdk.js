@@ -19,7 +19,7 @@ class BoomerangSDK {
     );
   }
   
-  async addBusinessFunds(numTokens, identityAddress, privateKey) {
+  async addBusinessFunds(numTokens, identityAddress, identityPrivateKey) {
     const boomFunds = utils.parseUnits(String(numTokens), 18);
     const {data} = new Interface(BoomToken.interface).functions.increaseApproval(this.boomerangContractAddress, String(boomFunds));
     const message = {
@@ -30,10 +30,10 @@ class BoomerangSDK {
       gasToken: this.boomTokenAddress,
       ...DEFAULT_PAYMENT_OPTIONS
     };
-    await this.universalLoginSDK.execute(identityAddress, message, privateKey);
+    await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
   }
 
-  async requestBusinessReview(customerAddress, txDetailsJson, customerTokenReward, customerXpReward, identityAddress, privateKey) {
+  async requestBusinessReview(customerAddress, txDetailsJson, customerTokenReward, customerXpReward, identityAddress, identityPrivateKey) {
     const boomReward = utils.parseUnits(String(customerTokenReward), 18);
     const {data} = new Interface(Boomerang.interface).functions.requestReview(customerAddress, boomReward, customerXpReward, identityAddress, 0, 0, txDetailsJson);
     const message = {
@@ -44,7 +44,7 @@ class BoomerangSDK {
       gasToken: this.boomTokenAddress,
       ...DEFAULT_PAYMENT_OPTIONS
     };
-    await this.universalLoginSDK.execute(identityAddress, message, privateKey);
+    await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
   }
 
   async getBusinessFunds(identityAddress) {
