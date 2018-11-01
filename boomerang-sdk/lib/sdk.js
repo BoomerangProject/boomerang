@@ -1,6 +1,6 @@
 import DEFAULT_PAYMENT_OPTIONS from './config';
 import BoomToken from 'boomerang-contracts/build/BoomerangToken';
-import Boomerang from 'boomerang-contracts/build/Boomerang';
+//import Boomerang from 'boomerang-contracts/build/Boomerang';
 import ethers, {Interface, utils} from 'ethers';
 import UniversalLoginSDK from 'universal-login-sdk';
 
@@ -19,8 +19,8 @@ class BoomerangSDK {
     );
   }
   
-  async addBusinessFunds(identityAddress, numTokens=20) {
-    const boomFunds = utils.parseUnits(String(numTokens), 18)
+  async addBusinessFunds(identityAddress, privateKey, numTokens = 20) {
+    const boomFunds = utils.parseUnits(String(numTokens), 18);
     const {data} = new Interface(BoomToken.interface).functions.increaseApproval(this.boomerangContractAddress, String(boomFunds));
     const message = {
       to: this.boomTokenAddress,
@@ -30,7 +30,7 @@ class BoomerangSDK {
       gasToken: this.boomTokenAddress,
       ...DEFAULT_PAYMENT_OPTIONS
     };
-    await this.universalLoginSDK.execute(message);
+    await this.universalLoginSDK.execute(identityAddress, message, privateKey);
   }
 
   async getBusinessFunds(identityAddress) {
