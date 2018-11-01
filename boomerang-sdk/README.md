@@ -17,13 +17,14 @@ const sdk = new BoomerangSDK(
 ### Generate Identity
 `generateIdentity(string ensName, int numTokens, string[] publicKeys, string roles[], string identityPrivateKey);`
 
-### Add Business Funds
-`addBusinessFunds(int numTokens, string identityPrivateKey, string identityAddress);`
+### Add Business Funds ✔
+`addBusinessFunds(numTokens, identityAddress, identityPrivateKey);`
+Allows Boomerang contract to use `numTokens` number of BOOM tokens. A business will call this and allocate an amount of BOOM tokens that they are willing to use to request reviews from customers. This DOES NOT transfer funds from caller's identity to Boomerang contract, rather allows the Boomerang contract to spend tokens on the identities behalf (When it requests reviews).
 
 ### Request Worker Review
 `requestWorkerReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string workerAddress, int workerRewardTokens, int workerRewardXP, string businessTxDetails, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
-### Request Business Review
+### Request Business Review ✔
 `requestBusinessReview(string customerAddress, int customerRewardTokens, int customerRewardXP, string txDetailsJSON, string ethTxDetails, string identityPrivateKey, string identityAddress);`
 
 ### Submit Review
