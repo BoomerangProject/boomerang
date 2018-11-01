@@ -1,6 +1,6 @@
 import DEFAULT_PAYMENT_OPTIONS from './config';
 import BoomToken from 'boomerang-contracts/build/BoomerangToken';
-//import Boomerang from 'boomerang-contracts/build/Boomerang';
+import Boomerang from 'boomerang-contracts/build/Boomerang';
 import ethers, {Interface, utils} from 'ethers';
 import UniversalLoginSDK from 'universal-login-sdk';
 
@@ -19,7 +19,7 @@ class BoomerangSDK {
     );
   }
   
-  async addBusinessFunds(identityAddress, privateKey, numTokens = 20) {
+  async addBusinessFunds(numTokens, identityAddress, privateKey) {
     const boomFunds = utils.parseUnits(String(numTokens), 18);
     const {data} = new Interface(BoomToken.interface).functions.increaseApproval(this.boomerangContractAddress, String(boomFunds));
     const message = {
@@ -33,8 +33,46 @@ class BoomerangSDK {
     await this.universalLoginSDK.execute(identityAddress, message, privateKey);
   }
 
+  async requestBusinessReview(customerAddress, txDetailsJson, customerTokenReward, customerXpReward, identityAddress, privateKey) {
+    const boomReward = utils.parseUnits(String(customerTokenReward), 18);
+    const {data} = new Interface(Boomerang.interface).functions.requestReview(customerAddress, boomReward, customerXpReward, identityAddress, 0, 0, txDetailsJson);
+    const message = {
+      to: this.boomerangContractAddress,
+      from: identityAddress,
+      value: 0,
+      data,
+      gasToken: this.boomTokenAddress,
+      ...DEFAULT_PAYMENT_OPTIONS
+    };
+    await this.universalLoginSDK.execute(identityAddress, message, privateKey);
+  }
+
   async getBusinessFunds(identityAddress) {
     return utils.formatEther(await this.boomTokenContract.allowance(identityAddress, this.boomerangContractAddress));
+  }
+
+  async getCustomerReviewRequests(userAddress) {
+    const reviewRequestEvent = new Interface(Boomerang.interface).events.ReviewRequested;
+    const reviewRequests = [];
+    const filter = {
+      fromBlock: 0,
+      address: this.boomerangContractAddress,
+      topics: [reviewRequestEvent.topics]
+    };
+    const events = await this.provider.getLogs(filter);
+    for (const event of events) {
+      const eventArguments = reviewRequestEvent.parse(reviewRequestEvent.topics, event.data);
+      if (eventArguments.customer === userAddress) {
+        reviewRequests.push({
+          reviewRequest: eventArguments.reviewRequest,
+          business: eventArguments.business,
+          customer: eventArguments.customer,
+          worker: eventArguments.worker,
+          txDetails: eventArguments.txDetailsIPFS
+        });
+      }
+    }
+    return reviewRequests.reverse();
   }
 }
 export default BoomerangSDK;
