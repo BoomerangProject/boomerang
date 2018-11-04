@@ -17,6 +17,7 @@ class BoomerangSDK {
       BoomToken.interface,
       provider
     );
+    this.reviewCompletedEvent = new Interface(Boomerang.interface).events.ReviewCompleted;
   }
   
   async addBusinessFunds(numTokens, identityAddress, identityPrivateKey) {
@@ -47,8 +48,59 @@ class BoomerangSDK {
     await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
   }
 
+  async submitReview(reviewId, rating, review, identityAddress, identityPrivateKey) {
+    // TODO: Put review into IPFS and use that for submit review.
+    const {data} = new Interface(Boomerang.interface).functions.completeReview(reviewId, rating, review);
+    const message = {
+      to: this.boomerangContractAddress,
+      from: identityAddress,
+      value: 0,
+      data,
+      gasToken: this.boomTokenAddress,
+      ...DEFAULT_PAYMENT_OPTIONS
+    };
+    await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
+  }
+
   async getBusinessFunds(identityAddress) {
     return utils.formatEther(await this.boomTokenContract.allowance(identityAddress, this.boomerangContractAddress));
+  }
+
+  async getCompletedReviews() {
+    const completedReviews = [];
+    const filter = {
+      fromBlock: 0,
+      address: this.boomerangContractAddress,
+      topics: [this.reviewCompletedEvent.topics]
+    };
+    return this.provider.getLogs(filter);
+  }
+
+  async getCompletedBusinessReviews(businessAddress) {
+
+  }
+
+  async getCompletedCustomerReviews(customerAddress) {
+    const completedCustomerReviews = [];
+    const events = this.getCompletedReviews();
+    for (const event of events) {
+      const eventArguments = this.reviewCompletedEvent.parse(this.reviewCompletedEvent.topics, event.data);
+      if (eventArguments.customer === customerAddress) {
+        reviewRequests.push({
+          reviewId: eventArguments.reviewId,
+          business: eventArguments.business,
+          customer: eventArguments.customer,
+          worker: eventArguments.worker,
+          rating: eventArguments.rating,
+          reviewHash: eventArguments.reviewHash
+        });
+      }
+    }
+    return reviewRequests.reverse();
+  }
+
+  async getCompletedWorkerReviews(workerAddress) {
+
   }
 
   async getCustomerReviewRequests(userAddress) {
@@ -64,11 +116,11 @@ class BoomerangSDK {
       const eventArguments = reviewRequestEvent.parse(reviewRequestEvent.topics, event.data);
       if (eventArguments.customer === userAddress) {
         reviewRequests.push({
-          reviewRequest: eventArguments.reviewRequest,
+          reviewId: eventArguments.reviewId,
           business: eventArguments.business,
           customer: eventArguments.customer,
           worker: eventArguments.worker,
-          txDetails: eventArguments.txDetailsIPFS
+          txDetailsHash: eventArguments.txDetailsHash
         });
       }
     }
