@@ -7,15 +7,14 @@ pragma solidity ^0.4.24;
  */
 interface IBoomerang {
 
-    /// @notice Create a ReviewRequest contract based on inputs (emits ReviewRequested event)
+    /// @notice Request a review from a customer (emits ReviewRequested event)
     /// @param _customer The customer's ethereum address
     /// @param _customerBoomReward The Boom Token reward for customer after completing review
     /// @param _customerXpReward The XP reward for customer after completing review
     /// @param _worker The worker's ethereum address
     /// @param _workerBoomReward The Boom Token reward for worker for receiving positive review
     /// @param _workerXpReward The XP reward for worker for receiving positive review
-    /// @param _txDetailsIPFS IPFS hash of the transaction details
-    /// @return The address of the created ReviewRequest
+    /// @param _txDetailsHash IPFS hash of the transaction details
     function requestReview(
         address _customer, 
         uint _customerBoomReward,
@@ -23,47 +22,55 @@ interface IBoomerang {
         address _worker,
         uint _workerBoomReward,
         uint _workerXpReward,
-        string _txDetailsIPFS
-    ) public returns(address);
+        string _txDetailsHash
+    ) public;
 
-    /// @notice Complete a review request with review information and modifies user and worker xp mapping
+    /// @notice Complete a review request with review information and modifies user and worker xp mapping (emits ReviewCompleted event)
+    /// @param _reviewId The review ID of the review being completed.
     /// @param _rating The customer's rating of a worker (0: Bad, 1:Neutral, 2:Positive)
-    /// @param _reviewIPFS The IPFS hash of the cutomer's typed review
-    /// @param _business The address of the business
-    /// @param _customer The address of the customer
-    /// @param _customerXpReward The XP reward for customer after completing review
-    /// @param _worker The worker's ethereum address
-    /// @param _workerXpReward The XP reward for worker for receiving positive review
+    /// @param _reviewHash The hash of the cutomer's typed review
     function completeReview(
+        uint _reviewId,
         uint _rating,
-        string _reviewIPFS,
-        address _business, 
-        address _customer, 
-        uint _customerXpReward,
-        address _worker,
-        uint _workerXpReward
-    ) public; // modifier: Only Review Contract
+        string _reviewHash
+    ) public;
     
     /// @notice Cancel's a review (emits ReviewCancelled event)
-    function cancelReview() public; // modifier: Only Review Contract
+    /// @param _reviewId The review ID of the review being cancelled.
+    function cancelReview(uint _reviewId) public;
+    
+    /// @notice Revise a review (emits ReviewRevised event)
+    /// @param _reviewId The review ID of the review being revised.
+    /// @param _rating The revised rating.
+    /// @param _reviewHash the revised hash of the customers typed review.
+    function reviseReview(uint _reviewId, uint _rating, string _reviewHash) public;
+    
+    /// @notice Like a review (emits ReviewLiked event)
+    /// @param _reviewId The review ID of the review being liked.
+    function likeReview(uint _reviewId) public;
+    
+    /// @notice Edits user's Boomerang profile (emits ProfileEdited event)
+    /// @param _profileHash The hash of the profile edit.
+    function editProfile(string _profileHash) public;
     
     // solhint-disable-next-line no-simple-event-func-name
     event ReviewRequested(
-        address reviewRequest, 
+        uint reviewId, 
         address business, 
-        address customer, 
+        address customer,
         address worker, 
-        string txDetailsIPFS
+        string txDetailsHash
     );
     event ReviewCompleted(
-        address reviewRequest, 
-        uint customerXpGain, 
-        uint workerXpGain, 
-        uint rating, 
-        string reviewIPFS
+        uint reviewId, 
+        address business, 
+        address customer,
+        address worker, 
+        uint rating,
+        string reviewHash
     );
-    event ReviewCancelled(address reviewRequest);
-    event ReviewEditRequested(address reviewRequest, address customer, uint rating, string review);
-    event ReviewLiked(address reviewRequest, address customer);
-    event ReviewUnliked(address reviewRequest, address customer);
+    event ReviewCancelled(uint reviewId);
+    event ReviewRevised(uint reviewId, uint rating, string reviewHash);
+    event ReviewLiked(uint reviewId, address customer);
+    event ProfileEdited(address user, string profileHash);
 }
