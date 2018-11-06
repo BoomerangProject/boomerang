@@ -4,12 +4,14 @@
   "main": "index.js",
   "license": "MIT",
   "dependencies": {
+    "boomerang-sdk": "0.1.0",
     "components": "^0.1.0",
     "date-fns": "^1.29.0",
     "detect-browser": "^3.0.1",
     "ethereum-waffle": "^0.2.3",
     "ethers": "^3.0.27",
     "fbemitter": "^2.1.1",
+    "ipfs-api": "^26.1.2",
     "iplocation": "^5.0.1",
     "localforage": "^1.7.2",
     "moment": "^2.22.2",
@@ -20,8 +22,7 @@
     "react-dom": "^16.4.1",
     "react-native-public-ip": "^1.0.0",
     "universal-login-relayer": "^0.1.0",
-    "universal-login-sdk": "^0.1.0",
-    "boomerang-sdk":"0.1.0"
+    "universal-login-sdk": "^0.1.0"
   },
   "scripts": {
     "start": "parcel --no-cache ./src/index.html",

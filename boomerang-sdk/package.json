@@ -4,12 +4,13 @@
   "main": "dist/sdk.js",
   "license": "MIT",
   "dependencies": {
+    "boomerang-contracts": "0.1.0",
     "deep-equal": "^1.0.1",
     "ethers": "^3.0.27",
+    "image-to-base64": "^2.0.1",
+    "ipfs-api": "^26.1.2",
     "universal-login-contracts": "0.1.0",
-    "universal-login-sdk": "0.1.0",
-    "boomerang-contracts": "0.1.0"
-
+    "universal-login-sdk": "0.1.0"
   },
   "scripts": {
     "build": "babel lib --out-dir dist",

@@ -1,7 +1,8 @@
 import {EventEmitter} from 'fbemitter';
 import EthereumIdentitySDK from 'universal-login-sdk';
+import BoomerangSDK from 'boomerang-sdk';
 import ethers from 'ethers';
-import config, {clickerContractAddress, tokenContractAddress} from '../../config/config';
+import config, {clickerContractAddress, tokenContractAddress, boomerangContractAddress} from '../../config/config';
 import IdentityService from './IdentityService';
 import ClickerService from './ClickerService';
 import EnsService from './EnsService';
@@ -11,6 +12,7 @@ import IdentitySelectionService from './IdentitySelectionService';
 import BackupService from './BackupService';
 import GreetingService from './GreetingService';
 import StorageService from './StorageService';
+import BoomerangService from './BoomerangService';
 import DEFAULT_PAYMENT_OPTIONS from '../../config/defaultPaymentOptions';
 
 
@@ -21,6 +23,7 @@ class Services {
     this.emitter = new EventEmitter();
     this.provider = new ethers.providers.JsonRpcProvider(this.config.jsonRpcUrl);
     this.sdk = new EthereumIdentitySDK(this.config.relayerUrl, this.provider);
+    this.boomerangSDK = new BoomerangSDK(this.config.relayerUrl, this.provider, boomerangContractAddress, tokenContractAddress);
     this.ensService = new EnsService(this.sdk, this.provider);
     this.tokenService = new TokenService(tokenContractAddress, this.provider);
     this.storageService = new StorageService();
@@ -30,6 +33,7 @@ class Services {
     this.authorisationService = new AuthorisationService(this.sdk, this.emitter);
     this.identitySelectionService = new IdentitySelectionService(this.sdk, config.ensDomains);
     this.greetingService = new GreetingService(this.provider);
+    this.boomerangService = new BoomerangService(this.identityService, this.boomerangSDK);
   }
 
   start() {
