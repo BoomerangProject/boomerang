@@ -14,7 +14,7 @@
     "universal-login-relayer",
     "universal-login-sdk",
     "boomerang-sdk",
-    "universal-login-example"
+    "boomerang-dapp"
   ],
   "dependencies": {
     "wsrun": "^2.2.1"

@@ -11,6 +11,12 @@ yarn-error.log
 /boomerang-example/.cache
 /boomerang-example/node_modules
 /boomerang-example/yarn-error.log
+/boomerang-dapp/.env
+/boomerang-dapp/dist
+/boomerang-dapp/build
+/boomerang-dapp/.cache
+/boomerang-dapp/node_modules
+/boomerang-dapp/yarn-error.log
 /boomerang-sdk/dist/
 /boomerang-sdk/node_modules/
 /boomerang-sdk/yarn-error.log
