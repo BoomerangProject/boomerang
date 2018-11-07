@@ -1,4 +1,5 @@
 import React, {Component} from 'react';
+import { Route, Redirect } from 'react-router-dom'
 import Login from './Login';
 import CreatingId from './CreatingId';
 import ApproveConnection from './ApproveConnection';
@@ -7,7 +8,6 @@ import Account from './Account';
 import MainScreen from './MainScreen';
 import PendingAuthorizations from './PendingAuthorizations';
 import Backup from './Backup';
-import Trusted from './Trusted';
 import RecoverAccount from './RecoverAccount';
 import PropTypes from 'prop-types';
 
@@ -55,10 +55,11 @@ class ContentContainer extends Component {
       return <PendingAuthorizations services = {services} setView={this.setView.bind(this)}/>;
     } else if (this.state.view === 'Backup') {
       return <Backup services={services} setView={this.setView.bind(this)}/>;
-    } else if (this.state.view === 'Trusted') {
-      return <Trusted setView={this.setView.bind(this)}/>;
     } else if (this.state.view === 'RecoverAccount') {
       return <RecoverAccount services={services} setView={this.setView.bind(this)}/>;
+    } else if (this.state.view === 'Profile') {
+      const ensName = this.state.viewParameters.ensName.replace(/\./g, '+');
+      return <Redirect to={"/profile/" + ensName} />;
     }
   }
 }

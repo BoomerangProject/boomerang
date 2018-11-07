@@ -3,7 +3,7 @@ import PropTypes from 'prop-types';
 
 const AccountLink = (props) => (
   <button onClick={() => props.setView('Account')} className="btn header-btn">
-    Account
+    Settings
   </button>
 );
 

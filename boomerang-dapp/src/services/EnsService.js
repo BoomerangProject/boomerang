@@ -20,6 +20,10 @@ class EnsService {
     return await this.sdk.getRelayerConfig();
   }
 
+  async getAddress(identity) {
+    return this.sdk.identityExist(identity);
+  }
+
   async getEnsName(address) {
     const node = namehash(`${address.slice(2)}.addr.reverse`.toLowerCase());
     this.resolverContract = this.resolverContract || new ethers.Contract(await this.getPublicResolverAddress(), PublicResolver.interface, this.provider);

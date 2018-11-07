@@ -3,26 +3,29 @@ import MainScreenView from '../views/MainScreenView';
 import HeaderView from '../views/HeaderView';
 import RequestsBadge from './RequestsBadge';
 import AccountLink from './AccountLink';
+import ProfileLink from './ProfileLink';
 import ProfileIdentity from './ProfileIdentity';
 import PropTypes from 'prop-types';
 
 class MainScreen extends Component {
   constructor(props) {
     super(props);
-    const {clickerService, boomerangService} = this.props.services;
+    const {clickerService, boomerangService, identityService} = this.props.services;
     this.clickerService = clickerService;
     this.boomerangService = boomerangService;
+    this.identityService = identityService;
     this.state = {lastClick: '0', lastPresser: 'nobody', events: []};
   }
 
-  setView(view) {
+  setView(view, options) {
     const {emitter} = this.props.services;
-    emitter.emit('setView', view);
+    emitter.emit('setView', view, options);
   }
 
   async onClickerClick() {
-    await this.clickerService.click();
-    this.setState({lastClick: '0'});
+    const {emitter} = this.props.services;
+    //await this.boomerangService.editProfile('Kyle B!', 'Just the coolest blockchain architect like ever', 'Boston Baby!');
+    //emitter.emit('setView', 'Profile', {ensName: this.identityService.identity.name})
   }
 
   componentDidMount() {
@@ -47,6 +50,7 @@ class MainScreen extends Component {
             identityService={this.props.services.identityService}/>
           <RequestsBadge setView={this.setView.bind(this)} services={this.props.services}/>
           <AccountLink setView={this.setView.bind(this)} />
+          <ProfileLink setView={this.setView.bind(this)} ensName={this.props.services.identityService.identity.name} />
         </HeaderView>
         <MainScreenView clicksLeft={this.state.clicksLeft} events={this.state.events} onClickerClick={this.onClickerClick.bind(this)} lastClick={this.state.lastClick} />
       </div>
