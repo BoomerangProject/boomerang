@@ -29,13 +29,19 @@ class BoomerangSDK {
     this.reviewCompletedEvent = new Interface(Boomerang.interface).events.ReviewCompleted;
   }
 
-  async editProfile({name, description, location, imgFile}, identityAddress, identityPrivateKey) {
+  async editProfile({name, description, location, imgFiles}, identityAddress, identityPrivateKey) {
     const oldProfile = this.getProfile(identityAddress);
     const userProfile = {};
     userProfile.name = name || oldProfile.name;
     userProfile.description = description || oldProfile.description;
     userProfile.location = location || oldProfile.location;
-    userProfile.imgFile =  imgFile && !! imgFile.length ? await image2base64(imgFile) : oldProfile.imgFile;
+    if (imgFiles) {
+      for (let i = 0; i < imgFiles.length - 1; i++) {
+        userProfile.imgFiles[i] =  imgFiles[i] && !! imgFiles[i].length ? await image2base64(imgFiles[i]) : oldProfile.imgFiles[i];
+      }
+    } else {
+      userProfile.imgFiles = oldProfile.imgFiles;
+    }
     const buffer = new Buffer(JSON.stringify(userProfile));
     await ipfs.add(buffer, async (err, profileHash) => {
       if (err) {
@@ -71,15 +77,11 @@ class BoomerangSDK {
     for (const event of events) {
       const eventArguments = profileEditEvent.parse(profileEditEvent.topics, event.data);
       if (eventArguments.user === userAddress) {
-        ({profileHash} = eventArguments.profileHash);
+        profileHash = eventArguments.profileHash;
       }
     }
     if (profileHash) {
-      const content = await ipfs.cat(profileHash, async (err) => {
-        if (err) {
-          return console.log(err);
-        }
-      });
+      const content = await ipfs.cat(profileHash);
       profileEdit = JSON.parse(content.toString('utf8'));
     }
     return profileEdit;

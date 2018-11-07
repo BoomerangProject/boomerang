@@ -22,7 +22,6 @@ class MainScreen extends Component {
 
   async onClickerClick() {
     await this.clickerService.click();
-    await this.boomerangService.editProfile('kyle', 'a cool dude', 'Boston');
     this.setState({lastClick: '0'});
   }
 
@@ -35,25 +34,6 @@ class MainScreen extends Component {
   }
 
   async update() {
-    const {tokenService} = await this.props.services;
-    const {identityService} = this.props.services;
-    const {address} = identityService.identity;
-    const balance = await tokenService.getBalance(address);
-    const clicksLeft = parseInt(balance, 10);
-    this.setState({clicksLeft});
-    const pressers = await this.clickerService.getPressEvents();
-    if (pressers.length > 0) {
-      this.setState({
-        lastClick: pressers[0].pressTime,
-        events: pressers});
-    } else {
-      this.setState({
-        lastClick: '0',
-        events: pressers});
-    }
-
-    let profile = await this.boomerangService.getProfile();
-    console.log(profile);
 
     setTimeout(this.update.bind(this), 1000);
   }
