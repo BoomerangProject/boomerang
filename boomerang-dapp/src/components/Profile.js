@@ -1,6 +1,8 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
-import ProfileView from '../views/ProfileView'
+import ProfileView from '../views/ProfileView';
+import { Route, Redirect } from 'react-router-dom';
+
 
 class Profile extends Component {
 
@@ -8,12 +10,10 @@ class Profile extends Component {
     super(props);
     this.ensService = this.props.services.ensService;
     this.boomerangService = this.props.services.boomerangService;
+    this.emitter = this.props.services.emitter;
     this.state = {
       ensName: 'loading...'
     };
-  }
-
-  async editProfile() {
   }
 
   async componentDidMount() {
@@ -27,6 +27,26 @@ class Profile extends Component {
     }
   }
 
+  editUsername(event) {
+    const username = event.target.value;
+    this.setState({username: username});
+  }
+
+  editDescription(event) {
+    const description = event.target.value;
+    this.setState({description: description});
+  }
+
+  editLocation(event) {
+    const location = event.target.value;
+    this.setState({location: location});
+  }
+
+  async saveProfile() {
+    const {username, location, description} = this.state;
+    await this.boomerangService.editProfile(username, description, location);
+  }
+
   render() {
     return (
       <div>
@@ -34,9 +54,12 @@ class Profile extends Component {
           ensName={this.state.ensName} 
           address={this.state.address} 
           username={this.state.username} 
+          editUsername={this.editUsername.bind(this)}
           description={this.state.description} 
+          editDescription={this.editDescription.bind(this)}
           location={this.state.location} 
-          editProfile={this.editProfile.bind(this)} />
+          editLocation={this.editLocation.bind(this)}
+          saveProfile={this.saveProfile.bind(this)} />
       </div>
     );
   }

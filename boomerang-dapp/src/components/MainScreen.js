@@ -24,7 +24,7 @@ class MainScreen extends Component {
 
   async onClickerClick() {
     const {emitter} = this.props.services;
-    //await this.boomerangService.editProfile('Kyle B!', 'Just the coolest blockchain architect like ever', 'Boston Baby!');
+    await this.boomerangService.editProfile('Kyle B!', 'Just the coolest blockchain architect like ever', 'Boston Baby!');
     //emitter.emit('setView', 'Profile', {ensName: this.identityService.identity.name})
   }
 

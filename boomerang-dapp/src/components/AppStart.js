@@ -7,6 +7,10 @@ class AppStart extends Component {
     super(props);
   }
 
+  componentDidMount() {
+    this.props.services.identityService.loadIdentity();
+  }
+
   render() {
     return (
       <div>
