@@ -101,7 +101,8 @@ describe('Boomerang', async () => {
     await expect(    
       boomerang.editProfile('myProfileHash')
     )
-    .to.emit(boomerang, 'ProfileEdited');
+    .to.emit(boomerang, 'ProfileEdited')
+    .withArgs(boomerangWallet.address, 'myProfileHash');
   });
 
   it('Does not allow review requester to exceed BOOM allowance', async () => {
