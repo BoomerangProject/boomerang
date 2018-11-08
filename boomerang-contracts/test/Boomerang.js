@@ -82,6 +82,28 @@ describe('Boomerang', async () => {
     .to.be.revertedWith('Message sender cannot be customer.');
   });
 
+  it('Does not allow customer to be worker', async () => {
+    await expect(    
+      boomerang.requestReview(
+        workerWallet.address, 
+        10,
+        10,
+        workerWallet.address,
+        10,
+        10,
+        'Skedaddle Trip'
+      )
+    )
+    .to.be.revertedWith('Worker cannot be customer.');
+  });
+
+  it('Allows anyone to edit their profile', async () => {
+    await expect(    
+      boomerang.editProfile('myProfileHash')
+    )
+    .to.emit(boomerang, 'ProfileEdited');
+  });
+
   it('Does not allow review requester to exceed BOOM allowance', async () => {
     await expect(    
       boomerang.requestReview(
@@ -95,24 +117,6 @@ describe('Boomerang', async () => {
       )
     )
     .to.be.reverted;
-  });
-
-  it('Only lets ReviewRequest contracts cancel reviews', async () => {
-    await expect(boomerang.cancelReview()).to.be.revertedWith('Sender not a ReviewRequest contract.');
-  });
-
-  it('Only lets ReviewRequest contracts complete reviews', async () => {
-    await expect(
-      boomerang.completeReview(
-        2,
-        "Fake review",
-        businessWallet.address,
-        customerWallet.address,
-        1000,
-        workerWallet.address,
-        1000
-      )
-    ).to.be.revertedWith('Sender not a ReviewRequest contract.');
   });
 
 })
