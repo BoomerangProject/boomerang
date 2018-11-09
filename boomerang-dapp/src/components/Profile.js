@@ -2,7 +2,10 @@ import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import ProfileView from '../views/ProfileView';
 import { Route, Redirect } from 'react-router-dom';
-
+import Modals from './Modals'
+import BackToAppBtn from './BackToAppBtn'
+import { Link } from 'react-router-dom';
+import HeaderView from '../views/HeaderView';
 
 class Profile extends Component {
 
@@ -47,9 +50,18 @@ class Profile extends Component {
     await this.boomerangService.editProfile(username, description, location);
   }
 
+  setView(view) {
+    // Do nothing.
+  }
+
   render() {
     return (
       <div>
+        <HeaderView>
+          <Link to="/">
+            <BackToAppBtn setView={this.setView.bind(this)} />
+          </Link>
+        </HeaderView>
         <ProfileView 
           ensName={this.state.ensName} 
           address={this.state.address} 
@@ -60,6 +72,7 @@ class Profile extends Component {
           location={this.state.location} 
           editLocation={this.editLocation.bind(this)}
           saveProfile={this.saveProfile.bind(this)} />
+        <Modals emitter={this.props.services.emitter} />
       </div>
     );
   }

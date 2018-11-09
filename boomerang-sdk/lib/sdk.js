@@ -29,9 +29,10 @@ class BoomerangSDK {
     this.reviewCompletedEvent = new Interface(Boomerang.interface).events.ReviewCompleted;
   }
 
-  async editProfile({name, description, location, imgFiles}, identityAddress, identityPrivateKey) {
+  async editProfile({profileType, name, description, location, imgFiles}, identityAddress, identityPrivateKey) {
     const oldProfile = this.getProfile(identityAddress);
     const userProfile = {};
+    userProfile.profileType = profileType || oldProfile.profileType;
     userProfile.name = name || oldProfile.name;
     userProfile.description = description || oldProfile.description;
     userProfile.location = location || oldProfile.location;

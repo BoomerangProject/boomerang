@@ -35,9 +35,9 @@ describe('Boomerang', async () => {
     await boomerangToken.approve(boomerang.address, 10000);
   });
 
-  it('Requests review from user of worker', async () => {
+  it('Fails to request a review of worker who is not part of business', async () => {
     await expect(    
-      boomerang.requestReview(
+      boomerang.requestWorkerReview(
         customerWallet.address, 
         10,
         10,
@@ -47,16 +47,13 @@ describe('Boomerang', async () => {
         'Skedaddle Trip'
       )
     )
-    .to.emit(boomerang, 'ReviewRequested');
+    .to.be.revertedWith('Worker is not part of business.');
   });
 
   it('Transfers BOOM reward from caller to ReviewRequest contract', async () => {
     await expect(    
-      boomerang.requestReview(
+      boomerang.requestBusinessReview(
         customerWallet.address, 
-        10,
-        10,
-        workerWallet.address,
         10,
         10,
         'Skedaddle Trip'
@@ -67,13 +64,10 @@ describe('Boomerang', async () => {
     expect(numTokens).to.eq(maxTokens - 20);
   });
 
-  it('Does not allow review requester to be customer', async () => {
+  it('Does not allow review requester (business) to be customer', async () => {
     await expect(    
-      boomerang.requestReview(
+      boomerang.requestBusinessReview(
         boomerangWallet.address, 
-        10,
-        10,
-        workerWallet.address,
         10,
         10,
         'Skedaddle Trip'
@@ -82,20 +76,21 @@ describe('Boomerang', async () => {
     .to.be.revertedWith('Message sender cannot be customer.');
   });
 
-  it('Does not allow customer to be worker', async () => {
-    await expect(    
-      boomerang.requestReview(
-        workerWallet.address, 
-        10,
-        10,
-        workerWallet.address,
-        10,
-        10,
-        'Skedaddle Trip'
-      )
-    )
-    .to.be.revertedWith('Worker cannot be customer.');
-  });
+  // TODO: Add worker to business, then request worker review
+  // it('Does not allow customer to be worker', async () => {
+  //   await expect(    
+  //     boomerang.requestReview(
+  //       workerWallet.address, 
+  //       10,
+  //       10,
+  //       workerWallet.address,
+  //       10,
+  //       10,
+  //       'Skedaddle Trip'
+  //     )
+  //   )
+  //   .to.be.revertedWith('Worker cannot be customer.');
+  // });
 
   it('Allows anyone to edit their profile', async () => {
     await expect(    
@@ -107,12 +102,9 @@ describe('Boomerang', async () => {
 
   it('Does not allow review requester to exceed BOOM allowance', async () => {
     await expect(    
-      boomerang.requestReview(
+      boomerang.requestBusinessReview(
         customerWallet.address, 
-        10000,
-        10,
-        workerWallet.address,
-        10000,
+        100000,
         10,
         'Skedaddle Trip'
       )

@@ -7,7 +7,7 @@ pragma solidity ^0.4.24;
  */
 interface IBoomerang {
 
-    /// @notice Request a review from a customer (emits ReviewRequested event)
+    /// @notice Request a review from a customer about a worker (emits ReviewRequested event)
     /// @param _customer The customer's ethereum address
     /// @param _customerBoomReward The Boom Token reward for customer after completing review
     /// @param _customerXpReward The XP reward for customer after completing review
@@ -15,7 +15,7 @@ interface IBoomerang {
     /// @param _workerBoomReward The Boom Token reward for worker for receiving positive review
     /// @param _workerXpReward The XP reward for worker for receiving positive review
     /// @param _txDetailsHash IPFS hash of the transaction details
-    function requestReview(
+    function requestWorkerReview(
         address _customer, 
         uint _customerBoomReward,
         uint _customerXpReward,
@@ -73,4 +73,7 @@ interface IBoomerang {
     event ReviewRevised(uint reviewId, uint rating, string reviewHash);
     event ReviewLiked(uint reviewId, address customer);
     event ProfileEdited(address user, string profileHash);
+    event AddWorkerRequested(address business, address worker);
+    event AddWorkerConfirmed(address business, address worker);
+    event WorkerRemoved(address _business, address _worker);
 }

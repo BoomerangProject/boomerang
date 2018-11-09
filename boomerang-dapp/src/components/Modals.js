@@ -1,6 +1,7 @@
 import React, {Component} from 'react';
 import DevicesModal from '../views/Modals/DevicesModal';
 import PostModal from '../views/Modals/PostModal';
+import ProfileSaveModal from '../views/Modals/ProfileSaveModal';
 import PropTypes from 'prop-types';
 
 class Modals extends Component {
@@ -25,6 +26,8 @@ class Modals extends Component {
 
   render() {
     switch (this.state.modal) {
+      case 'profileSave':
+        return <ProfileSaveModal hideModal={this.hideModal.bind(this)} />;
       case 'devices':
         return <DevicesModal hideModal={this.hideModal.bind(this)} />;
       case 'post':

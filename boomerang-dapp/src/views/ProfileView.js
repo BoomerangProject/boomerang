@@ -24,11 +24,6 @@ const ProfileView = (props) => (
       <button onClick={(event) => props.saveProfile()} className="btn main-screen-btn">
         Save Changes
       </button>
-      <Link to="/">
-        <button onClick={(event) => props.goBack()} className="btn main-screen-btn">
-          Back
-        </button>
-      </Link>
     </div>
   </div>
 );
@@ -44,8 +39,7 @@ ProfileView.propTypes = {
   editProfile: PropTypes.func,
   editLocation: PropTypes.func,
   editDescription: PropTypes.func,
-  saveProfile: PropTypes.func,
-  goBack: PropTypes.func
+  saveProfile: PropTypes.func
 };
 
 
