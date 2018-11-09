@@ -48,6 +48,7 @@ class Profile extends Component {
   async saveProfile() {
     const {username, location, description} = this.state;
     await this.boomerangService.editProfile(username, description, location);
+    this.emitter.emit('showModal', 'profileSave');
   }
 
   setView(view) {
@@ -56,22 +57,24 @@ class Profile extends Component {
 
   render() {
     return (
-      <div>
+      <div className="account">
         <HeaderView>
           <Link to="/">
             <BackToAppBtn setView={this.setView.bind(this)} />
           </Link>
         </HeaderView>
-        <ProfileView 
-          ensName={this.state.ensName} 
-          address={this.state.address} 
-          username={this.state.username} 
-          editUsername={this.editUsername.bind(this)}
-          description={this.state.description} 
-          editDescription={this.editDescription.bind(this)}
-          location={this.state.location} 
-          editLocation={this.editLocation.bind(this)}
-          saveProfile={this.saveProfile.bind(this)} />
+        <div className="container">
+          <ProfileView 
+            ensName={this.state.ensName} 
+            address={this.state.address} 
+            username={this.state.username} 
+            editUsername={this.editUsername.bind(this)}
+            description={this.state.description} 
+            editDescription={this.editDescription.bind(this)}
+            location={this.state.location} 
+            editLocation={this.editLocation.bind(this)}
+            saveProfile={this.saveProfile.bind(this)} />
+          </div>
         <Modals emitter={this.props.services.emitter} />
       </div>
     );

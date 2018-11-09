@@ -9,13 +9,19 @@ contract Boomerang is IBoomerang{
 
     BoomerangToken public boomToken;
     
+    // Review information
+
     uint public numReviews = 0;
+
     mapping(uint => bool) public isActiveReview;
+
     mapping(uint => uint) public reviewTimeCreated;
     
     // ReviewID -> Business address
     
     mapping(uint => address) public reviewBusiness;
+
+    mapping(address => mapping(address => uint)) public isBusinessWorker;
     
     // ReviewID -> Customer Details
     
@@ -44,7 +50,7 @@ contract Boomerang is IBoomerang{
         boomToken = _boomToken;
     }
     
-    function requestReview(
+    function requestWorkerReview(
         address _customer, 
         uint _customerBoomReward,
         uint _customerXpReward,
@@ -55,6 +61,7 @@ contract Boomerang is IBoomerang{
     ) 
         public 
     {
+        require(isBusinessWorker[msg.sender][_worker] == 2, "Worker is not part of business.");
         require(msg.sender != _customer, "Message sender cannot be customer.");
         require(_worker != _customer, "Worker cannot be customer.");
         
@@ -79,6 +86,40 @@ contract Boomerang is IBoomerang{
         
         emit ReviewRequested(
             numReviews, msg.sender, _customer, _worker, _txDetailsHash
+        );
+        numReviews = numReviews.add(1);
+    }
+
+    function requestBusinessReview(
+        address _customer, 
+        uint _customerBoomReward,
+        uint _customerXpReward,
+        string _txDetailsHash
+    ) 
+        public 
+    {
+        require(msg.sender != _customer, "Message sender cannot be customer.");
+        
+        reviewTimeCreated[numReviews] = block.timestamp;
+        isActiveReview[numReviews] = true;
+        
+        reviewBusiness[numReviews] = msg.sender;
+    
+        reviewCustomer[numReviews] = _customer;
+        reviewCustomerBoomReward[numReviews] = _customerBoomReward;
+        reviewCustomerXpReward[numReviews] = _customerXpReward;
+        
+        reviewWorker[numReviews] = msg.sender;
+        reviewWorkerBoomReward[numReviews] = 0;
+        reviewWorkerXpReward[numReviews] = 0;
+        
+        require(
+            boomToken.transferFrom(msg.sender, this, _customerBoomReward), 
+            "Not enough Boomerang tokens to request a review."
+        );
+        
+        emit ReviewRequested(
+            numReviews, msg.sender, _customer, msg.sender, _txDetailsHash
         );
         numReviews = numReviews.add(1);
     }
@@ -161,7 +202,7 @@ contract Boomerang is IBoomerang{
     function reviseReview(uint _reviewId, uint _rating, string _reviewHash) public {
         require(
             msg.sender == reviewCustomer[_reviewId],
-            "You must be the writer of this review in order to revise"
+            "You must be the writer of this review in order to revise."
         );
         emit ReviewRevised(_reviewId, _rating, _reviewHash);
     }
@@ -173,7 +214,30 @@ contract Boomerang is IBoomerang{
         );
         emit ReviewLiked(_reviewId, msg.sender);
     }
-    
+
+    function addWorkerRequest(address _worker) {
+        isBusinessWorker[msg.sender][_worker] = 1;
+        emit AddWorkerRequested(msg.sender, _worker);
+    }
+
+    function confirmWorkerRequest(address _business) {
+        require(
+            isBusinessWorker[_business][msg.sender] == 1,
+            "Can only confirm active add worker requests."
+        );
+        isBusinessWorker[_business][msg.sender] = 2;
+        emit AddWorkerConfirmed(_business, msg.sender);
+    }
+
+    function removeWorker(address _business, address _worker) {
+        require(
+            isBusinessWorker[_business][msg.sender] == 2 || isBusinessWorker[msg.sender][_worker] == 2,
+            "Only the worker or business can remove a worker."
+        );
+        isBusinessWorker[_business][_worker] = 0;
+        emit WorkerRemoved(_business, _worker);
+    }
+
     function editProfile(string _profileHash) public {
         emit ProfileEdited(msg.sender, _profileHash);
     }

@@ -1,20 +1,21 @@
 import React, {Component} from 'react';
-import MainScreenView from '../views/MainScreenView';
 import HeaderView from '../views/HeaderView';
 import RequestsBadge from './RequestsBadge';
 import AccountLink from './AccountLink';
 import ProfileLink from './ProfileLink';
 import ProfileIdentity from './ProfileIdentity';
 import PropTypes from 'prop-types';
+import BusinessDashboardView from '../views/BusinessDashboardView';
 
 class MainScreen extends Component {
   constructor(props) {
     super(props);
-    const {clickerService, boomerangService, identityService} = this.props.services;
+    const {clickerService, boomerangService, identityService, emitter} = this.props.services;
     this.clickerService = clickerService;
     this.boomerangService = boomerangService;
     this.identityService = identityService;
-    this.state = {lastClick: '0', lastPresser: 'nobody', events: []};
+    this.emitter = emitter;
+    this.state = {boomAllowance: 0, boomBalance: 0, requestedBoomAllowance: 0};
   }
 
   setView(view, options) {
@@ -22,10 +23,39 @@ class MainScreen extends Component {
     emitter.emit('setView', view, options);
   }
 
-  async onClickerClick() {
-    const {emitter} = this.props.services;
-    await this.boomerangService.editProfile('Kyle B!', 'Just the coolest blockchain architect like ever', 'Boston Baby!');
-    //emitter.emit('setView', 'Profile', {ensName: this.identityService.identity.name})
+  async requestBusinessReview() {
+    await this.boomerangService.requestBusinessReview(this.state.customerAddress, this.state.customerBoomReward, this.state.customerXpReward, this.state.txDetails);
+    this.emitter.emit('showModal', 'profileSave');
+  }
+
+  updateRequestedBoomAllowance(event) {
+    const requestedBoomAllowance = event.target.value;
+    this.setState({requestedBoomAllowance: requestedBoomAllowance});
+  }
+
+  updateCustomerAddress(event) {
+    const customerAddress = event.target.value;
+    this.setState({customerAddress: customerAddress});
+  }
+
+  updateCustomerBoomReward(event) {
+    const customerBoomReward = event.target.value;
+    this.setState({customerBoomReward: customerBoomReward});
+  }
+
+  updateCustomerXpReward(event) {
+    const customerXpReward = event.target.value;
+    this.setState({customerXpReward: customerXpReward});
+  }
+
+  updateTxDetails(event) {
+    const txDetails = event.target.value;
+    this.setState({txDetails: txDetails});
+  }
+
+  async addBoomAllowance() {
+    await this.boomerangService.addBoomFunds(this.state.requestedBoomAllowance);
+    this.emitter.emit('showModal', 'profileSave');
   }
 
   componentDidMount() {
@@ -37,6 +67,13 @@ class MainScreen extends Component {
   }
 
   async update() {
+    const balance = await this.boomerangService.getBoomBalance();
+    const boomBalance = parseInt(balance, 10);
+    this.setState({boomBalance: boomBalance});
+
+    const allowance = await this.boomerangService.getBoomFunds();
+    const boomAllowance = parseInt(allowance, 10);
+    this.setState({boomAllowance: boomAllowance});
 
     setTimeout(this.update.bind(this), 1000);
   }
@@ -52,7 +89,16 @@ class MainScreen extends Component {
           <AccountLink setView={this.setView.bind(this)} />
           <ProfileLink setView={this.setView.bind(this)} ensName={this.props.services.identityService.identity.name} />
         </HeaderView>
-        <MainScreenView clicksLeft={this.state.clicksLeft} events={this.state.events} onClickerClick={this.onClickerClick.bind(this)} lastClick={this.state.lastClick} />
+        <BusinessDashboardView 
+          updateRequestedBoomAllowance={this.updateRequestedBoomAllowance.bind(this)} 
+          addBoomAllowance={this.addBoomAllowance.bind(this)} 
+          boomAllowance={this.state.boomAllowance} 
+          boomBalance={this.state.boomBalance} 
+          requestBusinessReview={this.requestBusinessReview.bind(this)}
+          updateCustomerAddress={this.updateCustomerAddress.bind(this)}
+          updateCustomerBoomReward={this.updateCustomerBoomReward.bind(this)}
+          updateCustomerXpReward={this.updateCustomerXpReward.bind(this)}
+          updateTxDetails={this.updateTxDetails.bind(this)} />
       </div>
     );
   }

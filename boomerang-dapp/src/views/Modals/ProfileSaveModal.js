@@ -8,7 +8,7 @@ class ProfileSaveModal extends Component {
         <div className="modal-body">
           <div className="modal-content">
             <p className="modal-text">
-              Your profile is being saved. This will take a while. Check the status bar.
+              This transaction is being mined, check the status bar for updates.
             </p>
           </div>
           <div className="modal-footer">

@@ -88,33 +88,82 @@ class BoomerangSDK {
     return profileEdit;
   }
 
-  // async addBusinessFunds(numTokens, identityAddress, identityPrivateKey) {
-  //   const boomFunds = utils.parseUnits(String(numTokens), 18);
-  //   const {data} = new Interface(BoomToken.interface).functions.increaseApproval(this.boomerangContractAddress, String(boomFunds));
-  //   const message = {
-  //     to: this.boomTokenAddress,
-  //     from: identityAddress,
-  //     value: 0,
-  //     data,
-  //     gasToken: this.boomTokenAddress,
-  //     ...DEFAULT_PAYMENT_OPTIONS
-  //   };
-  //   await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
-  // }
+  async getBoomTokenBalance(userAddress) {
+    return utils.formatEther(await this.boomTokenContract.balanceOf(userAddress));
+  }
 
-  // async requestBusinessReview(customerAddress, txDetailsJson, customerTokenReward, customerXpReward, identityAddress, identityPrivateKey) {
-  //   const boomReward = utils.parseUnits(String(customerTokenReward), 18);
-  //   const {data} = new Interface(Boomerang.interface).functions.requestReview(customerAddress, boomReward, customerXpReward, identityAddress, 0, 0, txDetailsJson);
-  //   const message = {
-  //     to: this.boomerangContractAddress,
-  //     from: identityAddress,
-  //     value: 0,
-  //     data,
-  //     gasToken: this.boomTokenAddress,
-  //     ...DEFAULT_PAYMENT_OPTIONS
-  //   };
-  //   await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
-  // }
+  async addBusinessFunds(numTokens, identityAddress, identityPrivateKey) {
+    const boomFunds = utils.parseUnits(String(numTokens), 18);
+    const {data} = new Interface(BoomToken.interface).functions.increaseApproval(this.boomerangContractAddress, String(boomFunds));
+    const message = {
+      to: this.boomTokenAddress,
+      from: identityAddress,
+      value: 0,
+      data,
+      gasToken: this.boomTokenAddress,
+      ...DEFAULT_PAYMENT_OPTIONS
+    };
+    await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
+  }
+
+  async getBusinessFunds(identityAddress) {
+    return utils.formatEther(await this.boomTokenContract.allowance(identityAddress, this.boomerangContractAddress));
+  }
+
+  async requestBusinessReview(customerAddress, customerTokenReward, customerXpReward, txDetails, identityAddress, identityPrivateKey) {
+    const buffer = new Buffer(txDetails);
+    await ipfs.add(buffer, async (err, txDetailsHash) => {
+      if (err) {
+        return console.log(err);
+      }
+      await this.executeRequestBusinessReview(
+        customerAddress, 
+        customerTokenReward, 
+        customerXpReward, 
+        txDetailsHash[0].hash, 
+        identityAddress, 
+        identityPrivateKey
+      );
+    });
+  }
+
+  async executeRequestBusinessReview(customerAddress, customerTokenReward, customerXpReward, txDetailsHash, identityAddress, identityPrivateKey) {
+    const boomReward = utils.parseUnits(String(customerTokenReward), 18);
+    const {data} = new Interface(Boomerang.interface).functions.requestBusinessReview(customerAddress, boomReward, customerXpReward, txDetailsHash);
+    const message = {
+      to: this.boomerangContractAddress,
+      from: identityAddress,
+      value: 0,
+      data,
+      gasToken: this.boomTokenAddress,
+      ...DEFAULT_PAYMENT_OPTIONS
+    };
+    await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
+  }
+
+  async getCustomerReviewRequests(userAddress) {
+    const reviewRequestEvent = new Interface(Boomerang.interface).events.ReviewRequested;
+    const reviewRequests = [];
+    const filter = {
+      fromBlock: 0,
+      address: this.boomerangContractAddress,
+      topics: [reviewRequestEvent.topics]
+    };
+    const events = await this.provider.getLogs(filter);
+    for (const event of events) {
+      const eventArguments = reviewRequestEvent.parse(reviewRequestEvent.topics, event.data);
+      if (eventArguments.customer === userAddress) {
+        reviewRequests.push({
+          reviewId: Number(eventArguments.reviewId),
+          business: eventArguments.business,
+          customer: eventArguments.customer,
+          worker: eventArguments.worker,
+          txDetailsHash: eventArguments.txDetailsHash
+        });
+      }
+    }
+    return reviewRequests.reverse();
+  }
 
   // async submitReview(reviewId, rating, review, identityAddress, identityPrivateKey) {
   //   // TODO: Put review into IPFS and use that for submit review.
@@ -130,9 +179,7 @@ class BoomerangSDK {
   //   await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
   // }
 
-  // async getBusinessFunds(identityAddress) {
-  //   return utils.formatEther(await this.boomTokenContract.allowance(identityAddress, this.boomerangContractAddress));
-  // }
+
 
   // async getCompletedReviews() {
   //   const completedReviews = [];
@@ -171,28 +218,5 @@ class BoomerangSDK {
 
   // }
 
-  // async getCustomerReviewRequests(userAddress) {
-  //   const reviewRequestEvent = new Interface(Boomerang.interface).events.ReviewRequested;
-  //   const reviewRequests = [];
-  //   const filter = {
-  //     fromBlock: 0,
-  //     address: this.boomerangContractAddress,
-  //     topics: [reviewRequestEvent.topics]
-  //   };
-  //   const events = await this.provider.getLogs(filter);
-  //   for (const event of events) {
-  //     const eventArguments = reviewRequestEvent.parse(reviewRequestEvent.topics, event.data);
-  //     if (eventArguments.customer === userAddress) {
-  //       reviewRequests.push({
-  //         reviewId: eventArguments.reviewId,
-  //         business: eventArguments.business,
-  //         customer: eventArguments.customer,
-  //         worker: eventArguments.worker,
-  //         txDetailsHash: eventArguments.txDetailsHash
-  //       });
-  //     }
-  //   }
-  //   return reviewRequests.reverse();
-  // }
 }
 export default BoomerangSDK;

@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const ProfileView = (props) => (
   <div className="profile">
     <div className="profile-title">
-      <p className="profile-ensName">{props.ensName}</p>
+      <h1 className="main-title"> {props.ensName} </h1>
       <p className="profile-address">{props.address}</p>
     </div>
     <div className="profile-image">
@@ -21,7 +21,7 @@ const ProfileView = (props) => (
       <TextBox className="edit-profile-field" placeholder={props.location} onChange={(event) => props.editLocation(event)} />
       <p className="profile-label">Description</p>
       <TextBox className="edit-profile-field" placeholder={props.description} onChange={(event) => props.editDescription(event)} />
-      <button onClick={(event) => props.saveProfile()} className="btn main-screen-btn">
+      <button onClick={(event) => props.saveProfile()} className="btn fullwidth">
         Save Changes
       </button>
     </div>
