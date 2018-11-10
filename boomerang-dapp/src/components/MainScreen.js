@@ -82,9 +82,6 @@ class MainScreen extends Component {
     return (
       <div>
         <HeaderView>
-          <ProfileIdentity
-            type="identityHeader"
-            identityService={this.props.services.identityService}/>
           <RequestsBadge setView={this.setView.bind(this)} services={this.props.services}/>
           <AccountLink setView={this.setView.bind(this)} />
           <ProfileLink setView={this.setView.bind(this)} ensName={this.props.services.identityService.identity.name} />

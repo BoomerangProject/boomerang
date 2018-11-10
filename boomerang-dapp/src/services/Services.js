@@ -38,11 +38,13 @@ class Services {
 
   start() {
     this.sdk.start();
+    this.boomerangSDK.start();
     return this.identityService.loadIdentity();
   }
 
   stop() {
     this.sdk.stop();
+    this.boomerangSDK.stop();
   }
 }
 

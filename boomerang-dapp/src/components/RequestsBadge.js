@@ -7,6 +7,7 @@ class RequestsBadge extends Component {
     super(props);
     this.identityService = this.props.services.identityService;
     this.authorisationService = this.props.services.authorisationService;
+    this.boomerangService = this.props.services.boomerangService;
     this.state = {
       requests: this.authorisationService.pendingAuthorisations.length
     };
@@ -19,14 +20,27 @@ class RequestsBadge extends Component {
       address,
       this.onAuthorisationChanged.bind(this)
     );
+    this.subscription = this.boomerangService.subscribe(
+      'ReviewRequested',
+      this.onReviewRequested.bind(this)
+    );
   }
 
   componentWillUnmount() {
     this.subscription.remove();
   }
 
+  onReviewRequested(reviewRequest) {
+    if (reviewRequest.customer === this.identityService.identity.address) {
+      if (this.boomerangService.isActiveReview(reviewRequest.reviewId)) {
+        console.log(this.state.requests);
+        this.setState({requests: this.state.requests + 1});
+      }
+    }
+  }
+
   onAuthorisationChanged(authorisations) {
-    this.setState({requests: authorisations.length});
+    this.setState({requests: this.state.requests + authorisations.length});
     if (authorisations.length > 0) {
       this.nativeNotificationService.notifyLoginRequest(authorisations[0].label);
     }

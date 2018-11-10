@@ -3,6 +3,7 @@ class BoomerangService {
   constructor(identityService, boomerangSDK) {
     this.identityService = identityService;
     this.boomerangSDK = boomerangSDK;
+    this.newEvents = [];
   }
 
   async getProfile(userAddress = this.identityService.identity.address) {
@@ -37,6 +38,26 @@ class BoomerangService {
 
   async getBoomFunds(userAddress=this.identityService.identity.address) {
     return this.boomerangSDK.getBusinessFunds(userAddress);
+  }
+
+  async isActiveReview(reviewId) {
+    return this.boomerangSDK.isActiveReview(reviewId);
+  }
+
+  subscribe(eventType, callback) {
+    let isNew = true;
+    return this.boomerangSDK.subscribe(eventType, (event) => {
+      for(newEvent of this.newEvents) {
+        if (newEvent === event) {
+          isNew = false;
+          break;
+        }
+      }
+      if (isNew) {
+        this.newEvents.push(event);
+        callback(event);
+      }
+    });
   }
 }
 

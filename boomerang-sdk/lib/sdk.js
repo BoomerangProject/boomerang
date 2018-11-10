@@ -1,6 +1,7 @@
 import DEFAULT_PAYMENT_OPTIONS from './config';
 import BoomToken from 'boomerang-contracts/build/BoomerangToken';
 import Boomerang from 'boomerang-contracts/build/Boomerang';
+import BlockchainObserver from './observers/BlockchainObserver';
 import ethers, {Interface, utils} from 'ethers';
 import UniversalLoginSDK from 'universal-login-sdk';
 import image2base64 from 'image-to-base64';
@@ -15,6 +16,7 @@ class BoomerangSDK {
     this.boomerangContractAddress = boomerangContractAddress;
     this.boomTokenAddress = boomTokenAddress;
     this.defaultPaymentOptions = {...DEFAULT_PAYMENT_OPTIONS, ...paymentOptions};
+    this.blockchainObserver = new BlockchainObserver(provider);
     this.universalLoginSDK = new UniversalLoginSDK(relayerUrl, provider, this.defaultPaymentOptions);
     this.boomTokenContract = new ethers.Contract(
       boomTokenAddress,
@@ -163,6 +165,26 @@ class BoomerangSDK {
       }
     }
     return reviewRequests.reverse();
+  }
+
+  async isActiveReview(reviewId) {
+    return await this.boomerangContract.isActiveReview(reviewId);
+  }
+
+  subscribe(eventType, callback) {
+    return this.blockchainObserver.subscribe(eventType, this.boomerangContractAddress, callback);
+  }
+
+  async start() {
+    await this.blockchainObserver.start();
+  }
+
+  stop() {
+    this.blockchainObserver.stop();
+  }
+
+  async finalizeAndStop() {
+    await this.blockchainObserver.finalizeAndStop();
   }
 
   // async submitReview(reviewId, rating, review, identityAddress, identityPrivateKey) {

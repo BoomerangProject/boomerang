@@ -241,4 +241,8 @@ contract Boomerang is IBoomerang{
     function editProfile(string _profileHash) public {
         emit ProfileEdited(msg.sender, _profileHash);
     }
+
+    function isActiveReview(uint _reviewId) public view returns(bool isActive) {
+        return isActiveReview[_reviewId];
+    }
 }

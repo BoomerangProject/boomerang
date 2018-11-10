@@ -16,6 +16,7 @@ class NativeNotificationService {
   notifyLoginRequest(label) {
     this.notify(`Login requested from ${label.os} from ${label.city}.`);
   }
+  
 }
 
 export default NativeNotificationService;
