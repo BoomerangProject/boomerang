@@ -8,7 +8,7 @@ import { Link } from 'react-router-dom';
 const ProfileView = (props) => (
   <div className="profile">
     <div className="profile-title">
-      <h1 className="main-title"> {props.ensName} </h1>
+      <h1 className="sub-title"> {props.ensName} </h1>
       <p className="profile-address">{props.address}</p>
     </div>
     <div className="profile-image">

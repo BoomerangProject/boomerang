@@ -15,7 +15,7 @@ class IdentitySelector extends Component {
 
   async update(event) {
     const identity = event.target.value;
-    const [connections, creations] = await this.props.identitySelectionService.getSuggestions(event.target.value);
+    const [connections, creations] = await this.props.identitySelectionService.getSuggestions(event.target.value.toLowerCase());
     this.setState({identity, connections, creations});
   }
 
@@ -25,7 +25,7 @@ class IdentitySelector extends Component {
         <h2> Type an username </h2>
         <div className="id-selector">
           <TextBox
-            placeholder="bob.example.eth"
+            placeholder="bob.boom-id.xyz"
             onChange={(event) => this.update(event)}
           />
         </div>
