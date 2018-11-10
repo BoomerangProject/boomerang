@@ -47,8 +47,8 @@ class BoomerangService {
   subscribe(eventType, callback) {
     let isNew = true;
     return this.boomerangSDK.subscribe(eventType, (event) => {
-      for(newEvent of this.newEvents) {
-        if (newEvent === event) {
+      for(const newEvent of this.newEvents) {
+        if (JSON.stringify(newEvent) === JSON.stringify(event)) {
           isNew = false;
           break;
         }

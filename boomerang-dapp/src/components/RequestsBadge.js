@@ -33,14 +33,14 @@ class RequestsBadge extends Component {
   onReviewRequested(reviewRequest) {
     if (reviewRequest.customer === this.identityService.identity.address) {
       if (this.boomerangService.isActiveReview(reviewRequest.reviewId)) {
-        console.log(this.state.requests);
-        this.setState({requests: this.state.requests + 1});
+        this.setState({requests: 1});
+        this.nativeNotificationService.notifyReviewRequest(reviewRequest);
       }
     }
   }
 
   onAuthorisationChanged(authorisations) {
-    this.setState({requests: this.state.requests + authorisations.length});
+    this.setState({requests: authorisations.length});
     if (authorisations.length > 0) {
       this.nativeNotificationService.notifyLoginRequest(authorisations[0].label);
     }
