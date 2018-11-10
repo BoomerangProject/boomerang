@@ -6,7 +6,7 @@ import ApproveConnection from './ApproveConnection';
 import Greeting from './Greeting';
 import Account from './Account';
 import MainScreen from './MainScreen';
-import PendingAuthorizations from './PendingAuthorizations';
+import PendingRequests from './PendingRequests';
 import Backup from './Backup';
 import RecoverAccount from './RecoverAccount';
 import PropTypes from 'prop-types';
@@ -51,8 +51,8 @@ class ContentContainer extends Component {
       return (<Account identityService={services.identityService}/>);
     } else if (this.state.view === 'ApproveConnection') {
       return <ApproveConnection services={services}/>;
-    } else if (this.state.view === 'PendingAuthorizations') {
-      return <PendingAuthorizations services = {services} setView={this.setView.bind(this)}/>;
+    } else if (this.state.view === 'PendingRequests') {
+      return <PendingRequests services = {services} setView={this.setView.bind(this)}/>;
     } else if (this.state.view === 'Backup') {
       return <Backup services={services} setView={this.setView.bind(this)}/>;
     } else if (this.state.view === 'RecoverAccount') {

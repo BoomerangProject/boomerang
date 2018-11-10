@@ -33,7 +33,7 @@ class Services {
     this.authorisationService = new AuthorisationService(this.sdk, this.emitter);
     this.identitySelectionService = new IdentitySelectionService(this.sdk, config.ensDomains);
     this.greetingService = new GreetingService(this.provider);
-    this.boomerangService = new BoomerangService(this.identityService, this.boomerangSDK);
+    this.boomerangService = new BoomerangService(this.identityService, this.boomerangSDK, this.ensService);
   }
 
   start() {

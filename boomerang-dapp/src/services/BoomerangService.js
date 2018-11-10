@@ -1,8 +1,9 @@
 
 class BoomerangService {
-  constructor(identityService, boomerangSDK) {
+  constructor(identityService, boomerangSDK, ensService) {
     this.identityService = identityService;
     this.boomerangSDK = boomerangSDK;
+    this.ensService = ensService;
     this.newEvents = [];
   }
 
@@ -42,6 +43,24 @@ class BoomerangService {
 
   async isActiveReview(reviewId) {
     return this.boomerangSDK.isActiveReview(reviewId);
+  }
+
+  async getPendingReviewRequests() {
+    let pendingReviewsWithContent = [];
+    const pendingReviews = await this.boomerangSDK.getPendingReviewRequests(this.identityService.identity.address);
+    for (const pendingReview of pendingReviews) {
+      let pendingReviewWithContent = {};
+      pendingReviewWithContent.key = pendingReview.reviewId;
+      pendingReviewWithContent.reviewId = pendingReview.reviewId;
+      pendingReviewWithContent.txDetails = await this.boomerangSDK.getContent(pendingReview.txDetailsHash);
+      pendingReviewWithContent.businessName = await this.ensService.getEnsName(pendingReview.business);
+      pendingReviewWithContent.customerName = await this.ensService.getEnsName(pendingReview.customer);
+      pendingReviewWithContent.workerName = await this.ensService.getEnsName(pendingReview.worker);
+      pendingReviewWithContent.boomReward = await this.boomerangSDK.getCustomerBoomReward(pendingReview.reviewId);
+      pendingReviewWithContent.xpReward = await this.boomerangSDK.getCustomerXpReward(pendingReview.reviewId);
+      pendingReviewsWithContent.push(pendingReviewWithContent);
+    }
+    return pendingReviewsWithContent;
   }
 
   subscribe(eventType, callback) {

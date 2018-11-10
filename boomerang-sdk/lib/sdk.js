@@ -143,7 +143,7 @@ class BoomerangSDK {
     await this.universalLoginSDK.execute(identityAddress, message, identityPrivateKey);
   }
 
-  async getCustomerReviewRequests(userAddress) {
+  async getPendingReviewRequests(customerAddress) {
     const reviewRequestEvent = new Interface(Boomerang.interface).events.ReviewRequested;
     const reviewRequests = [];
     const filter = {
@@ -154,7 +154,7 @@ class BoomerangSDK {
     const events = await this.provider.getLogs(filter);
     for (const event of events) {
       const eventArguments = reviewRequestEvent.parse(reviewRequestEvent.topics, event.data);
-      if (eventArguments.customer === userAddress) {
+      if (eventArguments.customer === customerAddress && this.isActiveReview(Number(eventArguments.reviewId))) {
         reviewRequests.push({
           reviewId: Number(eventArguments.reviewId),
           business: eventArguments.business,
@@ -165,6 +165,21 @@ class BoomerangSDK {
       }
     }
     return reviewRequests.reverse();
+  }
+
+  async getCustomerBoomReward(reviewId) {
+    const boomReward = await this.boomerangContract.getCustomerBoomReward(reviewId);
+    return utils.formatEther(boomReward);
+  }
+
+  async getCustomerXpReward(reviewId) {
+    const xpReward = await this.boomerangContract.getCustomerXpReward(reviewId);
+    return Number(xpReward);
+  }
+
+  async getContent(ipfsHash) {
+    const content = await ipfs.cat(ipfsHash);
+    return content.toString('utf8');
   }
 
   async isActiveReview(reviewId) {

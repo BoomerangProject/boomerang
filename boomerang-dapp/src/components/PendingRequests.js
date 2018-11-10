@@ -2,32 +2,37 @@ import React, {Component} from 'react';
 import HeaderView from '../views/HeaderView';
 import RequestsBadge from './RequestsBadge';
 import BackBtn from './BackBtn';
-import PendingAuthorizationsView from '../views/PendingAuthorizationsView';
+import PendingRequestsView from '../views/PendingRequestsView';
 import PropTypes from 'prop-types';
 import ProfileIdentity from './ProfileIdentity';
 import {tokenContractAddress} from '../../config/config';
 import DEFAULT_PAYMENT_OPTIONS from '../../config/defaultPaymentOptions';
 
-class PendingAuthorizations extends Component {
+class PendingRequests extends Component {
   constructor(props) {
     super(props);
     this.identityService = this.props.services.identityService;
+    this.boomerangService = this.props.services.boomerangService;
     this.sdk = this.props.services.sdk;
     this.authorisationService = this.props.services.authorisationService;
     this.state = {
-      authorisations: this.authorisationService.pendingAuthorisations
+      authorisations: this.authorisationService.pendingAuthorisations,
+      reviewRequests: []
     };
   }
 
-  componentDidMount() {
+  async componentDidMount() {
+    const pendingReviewRequests = await this.boomerangService.getPendingReviewRequests();
     const {address} = this.identityService.identity;
     this.setState({
-      authorisations: this.authorisationService.pendingAuthorisations
+      authorisations: this.authorisationService.pendingAuthorisations,
+      reviewRequests: pendingReviewRequests
     });
     this.subscription = this.authorisationService.subscribe(
       address,
       this.onAuthorisationChanged.bind(this)
     );
+    
   }
 
   componentWillUnmount() {
@@ -63,6 +68,10 @@ class PendingAuthorizations extends Component {
     await sdk.denyRequest(identityAddress, publicKey);
   }
 
+  async onStartReviewClick(reviewId) {
+
+  }
+
   render() {
     return (
       <div>
@@ -77,20 +86,22 @@ class PendingAuthorizations extends Component {
           />
           <BackBtn setView={this.props.setView} />
         </HeaderView>
-        <PendingAuthorizationsView
+        <PendingRequestsView
           setView={this.props.setView}
+          reviewRequests={this.state.reviewRequests}
           authorisations={this.state.authorisations}
           onAcceptClick={this.onAcceptClick.bind(this)}
           onDenyClick={this.onDenyClick.bind(this)}
+          onStartReviewClick={this.onStartReviewClick.bind(this)}
         />
       </div>
     );
   }
 }
 
-PendingAuthorizations.propTypes = {
+PendingRequests.propTypes = {
   setView: PropTypes.func,
   services: PropTypes.object
 };
 
-export default PendingAuthorizations;
+export default PendingRequests;

@@ -18,7 +18,7 @@ class NativeNotificationService {
   }
 
   notifyReviewRequest(reviewRequest) {
-    this.notify(`Review requested from ${reviewRequest.business} about ${reviewRequest.business}.`);
+    this.notify(`Review requested from ${reviewRequest.business} about ${reviewRequest.worker}.`);
   }
 
 }

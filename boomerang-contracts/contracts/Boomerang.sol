@@ -245,4 +245,12 @@ contract Boomerang is IBoomerang{
     function isActiveReview(uint _reviewId) public view returns(bool isActive) {
         return isActiveReview[_reviewId];
     }
+
+    function getCustomerBoomReward(uint _reviewId) public view returns(uint boomReward) {
+        return reviewCustomerBoomReward[_reviewId];
+    }
+
+    function getCustomerXpReward(uint _reviewId) public view returns(uint xpReward) {
+        return reviewCustomerXpReward[_reviewId];
+    }
 }

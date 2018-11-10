@@ -30,7 +30,7 @@ class RequestsBadge extends Component {
     this.subscription.remove();
   }
 
-  onReviewRequested(reviewRequest) {
+  async onReviewRequested(reviewRequest) {
     if (reviewRequest.customer === this.identityService.identity.address) {
       if (this.boomerangService.isActiveReview(reviewRequest.reviewId)) {
         this.setState({requests: 1});
@@ -49,7 +49,7 @@ class RequestsBadge extends Component {
   render() {
     return this.state.requests > 0 ? (
       <button
-        onClick={() => this.props.setView('PendingAuthorizations')}
+        onClick={() => this.props.setView('PendingRequests')}
         className="request-notification"
       >
         {this.state.requests}

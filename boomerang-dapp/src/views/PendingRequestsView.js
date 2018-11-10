@@ -1,13 +1,14 @@
 import React, {Component} from 'react';
 import PropTypes from 'prop-types';
 import PendingAuthorisationView from './PendingAuthorisationView';
+import PendingReviewRequestsView from './PendingReviewRequestsView';
 
-class PendingAuthorizationsView extends Component {
+class PendingRequestsView extends Component {
   render() {
-    if (this.props.authorisations.length === 0) {
+    if (this.props.authorisations.length + this.props.reviewRequests.length === 0) {
       return (
         <div className="pending-authorizations">
-          <em>There are no pending authorizations at the moment</em>
+          <em>There are no pending requests at the moment</em>
         </div>
       );
     }
@@ -19,12 +20,20 @@ class PendingAuthorizationsView extends Component {
         onDenyClick={this.props.onDenyClick}
       />));
 
+    console.log(this.props.reviewRequests);
+    const reviewRequests = this.props.reviewRequests.map((reviewRequest) => (
+      <PendingReviewRequestsView
+        onStartReviewClick={this.props.onStartReviewClick}
+        reviewRequest={reviewRequest}
+      />));
+
     return (
       <div className="pending-authorizations">
-        <h1 className="main-title">Pending Authorizations</h1>
+        <h1 className="main-title">Pending Requests</h1>
         <div className="container">
           <div className="container">
             {authorisations}
+            {reviewRequests}
           </div>
         </div>
       </div>
@@ -32,10 +41,12 @@ class PendingAuthorizationsView extends Component {
   }
 }
 
-PendingAuthorizationsView.propTypes = {
+PendingRequestsView.propTypes = {
+  reviewRequests: PropTypes.array,
   authorisations: PropTypes.array,
   onAcceptClick: PropTypes.func,
-  onDenyClick: PropTypes.func
+  onDenyClick: PropTypes.func,
+  onStartReviewClick: PropTypes.func
 };
 
-export default PendingAuthorizationsView;
+export default PendingRequestsView;
