@@ -5,9 +5,10 @@ import AccountLink from './AccountLink';
 import ProfileLink from './ProfileLink';
 import ProfileIdentity from './ProfileIdentity';
 import PropTypes from 'prop-types';
+import DropDown from './DropDown';
 import BusinessDashboardView from '../views/BusinessDashboardView';
 
-class MainScreen extends Component {
+class BusinessDashboard extends Component {
   constructor(props) {
     super(props);
     const {clickerService, boomerangService, identityService, emitter} = this.props.services;
@@ -66,6 +67,10 @@ class MainScreen extends Component {
     clearTimeout(this.timeout);
   }
 
+  returnValue(value) {
+    this.setView(value);
+  }
+
   async update() {
     const balance = await this.boomerangService.getBoomBalance();
     const boomBalance = parseInt(balance, 10);
@@ -82,6 +87,7 @@ class MainScreen extends Component {
     return (
       <div>
         <HeaderView>
+          <DropDown title='Business' returnValue={this.returnValue.bind(this)}/>
           <RequestsBadge setView={this.setView.bind(this)} services={this.props.services}/>
           <AccountLink setView={this.setView.bind(this)} />
           <ProfileLink setView={this.setView.bind(this)} ensName={this.props.services.identityService.identity.name} />
@@ -101,8 +107,8 @@ class MainScreen extends Component {
   }
 }
 
-MainScreen.propTypes = {
+BusinessDashboard.propTypes = {
   services: PropTypes.object
 };
 
-export default MainScreen;
+export default BusinessDashboard;

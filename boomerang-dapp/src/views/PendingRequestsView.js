@@ -20,7 +20,6 @@ class PendingRequestsView extends Component {
         onDenyClick={this.props.onDenyClick}
       />));
 
-    console.log(this.props.reviewRequests);
     const reviewRequests = this.props.reviewRequests.map((reviewRequest) => (
       <PendingReviewRequestsView
         onStartReviewClick={this.props.onStartReviewClick}
@@ -29,7 +28,7 @@ class PendingRequestsView extends Component {
 
     return (
       <div className="pending-authorizations">
-        <h1 className="main-title">Pending Requests</h1>
+        <h1 className="main-title">Notifications</h1>
         <div className="container">
           <div className="container">
             {authorisations}

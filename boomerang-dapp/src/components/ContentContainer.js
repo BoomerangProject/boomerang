@@ -5,7 +5,8 @@ import CreatingId from './CreatingId';
 import ApproveConnection from './ApproveConnection';
 import Greeting from './Greeting';
 import Account from './Account';
-import MainScreen from './MainScreen';
+import CustomerDashboard from './CustomerDashboard';
+import BusinessDashboard from './BusinessDashboard';
 import PendingRequests from './PendingRequests';
 import Backup from './Backup';
 import RecoverAccount from './RecoverAccount';
@@ -45,8 +46,10 @@ class ContentContainer extends Component {
         identityService={services.identityService}
         greetingService={services.greetingService}
         viewParameters={this.state.viewParameters} />;
-    } else if (this.state.view === 'MainScreen') {
-      return <MainScreen services={services}/>;
+    } else if (this.state.view === 'MainScreen' || this.state.view === 'Customer') {
+      return <CustomerDashboard services={services}/>;
+    } else if (this.state.view === 'Business') {
+      return <BusinessDashboard services={services}/>;
     } else if (this.state.view === 'Account') {
       return (<Account identityService={services.identityService}/>);
     } else if (this.state.view === 'ApproveConnection') {

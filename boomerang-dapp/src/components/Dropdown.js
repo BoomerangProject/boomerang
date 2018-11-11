@@ -7,7 +7,7 @@ class Dropdown extends Component {
     super(props);
     this.state = {
       isListOpen: false,
-      content: this.props.dropdownContent,
+      content: ['Business', 'Customer'],
       title: this.props.title || 'Select item'
     };
   }
